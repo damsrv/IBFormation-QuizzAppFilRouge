@@ -1,4 +1,7 @@
-﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+﻿@using QuizzAppFilRouge.Data.Entities
+@using QuizzAppFilRouge.Data
+
+@model IEnumerable<UserInfo>
 
 
     <h1>List of User</h1>
@@ -6,7 +9,12 @@
     </br>
     </br>
 
+    <h1>@EnumRoles.Recruiter</h1>
 
+
+@{
+    // TODO : Add a dropdown menu to choose to role to apply to the user
+}
     <thead>
         <tr>
             <td> Id</td>
@@ -20,8 +28,10 @@
     {
         var i = 0;
             <tr>
-                <td>@user.Id</td>
-                <td>@user.Email</td>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.IdentityUser.Id</td>
+                <td>@user.IdentityUser.Email</td>
                 <br />
 
             </tr>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace QuizzAppFilRouge.Models
 {
@@ -16,6 +17,8 @@ namespace QuizzAppFilRouge.Models
         [DataType(DataType.EmailAddress)]
         [Required(ErrorMessage = "Veuillez entrer votre Email")]
         public string Email { get; set; }
+
+        public IdentityRole Role { get; set; }
 
     }
 }

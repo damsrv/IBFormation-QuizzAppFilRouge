@@ -12,7 +12,7 @@ namespace QuizzAppFilRouge.Controllers
     {
 
         private RoleManager<IdentityRole> roleManager;
-
+         
 
         public RoleController(RoleManager<IdentityRole> roleManager) 
         {

@@ -4,6 +4,7 @@ using Microsoft.Identity.Client;
 using QuizzAppFilRouge.Data;
 using QuizzAppFilRouge.Data.Entities;
 using QuizzAppFilRouge.Models;
+using System.Dynamic;
 
 namespace QuizzAppFilRouge.Controllers
 {
@@ -28,8 +29,15 @@ namespace QuizzAppFilRouge.Controllers
 
         public IActionResult GetUserList()
         {
-            var user = userManager.Users.ToList();
-            return View(user);
+            // Besoin de cette ligne car si pas cette ligne la ligne d'en dessous
+            // ne récupèrer pas automatiquement le user associé via la foreign key
+            // dans la table AspNetUser
+            var listIdentityUser = userManager.Users.ToList(); 
+
+            var listUserInfos = context.UserInfos.Select( user => user).ToList();
+ 
+
+            return View(listUserInfos);
         }
 
         [HttpGet]

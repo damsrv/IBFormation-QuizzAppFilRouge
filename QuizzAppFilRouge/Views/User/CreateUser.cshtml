@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model CreateUserViewModel;
+
+
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<h1> @ViewData["Title"]</h1>
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <form method="post">
+            <h4>Créer un nouveau User : </h4>
+
+            <hr />
+
+            <div asp-validation-summary="All" class="text-danger">
+                <div class="form-group">
+                    <label asp-for="FirsName"> FirsName </label>
+                    <input asp-for="FirsName" class="form-control" />
+                    <span asp-validation-for="FirsName" class="text-danger"></span>
+                    
+                    <label asp-for="LastName"> LastName </label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                
+
+                    <label asp-for="Email"> Email </label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary"> Créer le role</button>
+            </div>
+        </form>
+    </div>
+
+    @*@<partial name="~Views\Role\AddRole.cshtml" />*@
+
+    @{
+        // ne marche pas ... A voir pk
+        if (ViewBag.SuccessMessage != null)
+        {
+                     <div>
+                @ViewBag.SuccessMessage
+                     </div>
+        }
+    }
+
+
+    @* Ajout vérification coté navigateur *@
+    @section Scripts
+        {
+        <partial name="_ValidationScriptsPartial"></partial>
+}
+
+
+
+</div>

@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using QuizzAppFilRouge.Models.Role;
+@model CreateRoleViewModel 
+
+
+@{
+    ViewData["Title"] = "Create Role";
+}
+
+<h1> @ViewData["Title"]</h1>
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <form method="post">
+            <h4>Créer un nouveau role : </h4>
+
+            <hr />
+
+            <div asp-validation-summary="All" class="text-danger">
+                <div class="form-group">
+                    <label asp-for="Name"> </label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary"> Créer le role</button>
+            </div>
+        </form>
+    </div>
+
+
+    @{ // ne marche pas ... A voir pk
+        if (ViewBag.SuccessMessage != null)
+        {
+             <div>
+                @ViewBag.SuccessMessage
+             </div>
+        }
+    }
+    
+
+@* Ajout vérification coté navigateur *@
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial"></partial>
+}
+
+
+
+</div>

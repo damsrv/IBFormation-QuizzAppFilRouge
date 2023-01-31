@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+
+
+    <h1>List of User</h1>
+
+    </br>
+    </br>
+
+
+    <thead>
+        <tr>
+            <td> Id</td>
+            <td> Name</td>
+        </tr>
+    </thead>
+
+    <tbody>
+        <br />
+    @foreach (var user in Model)
+    {
+        var i = 0;
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Email</td>
+                <br />
+
+            </tr>
+    }
+    </tbody>
+
+    </br>
+    </br>
+
+

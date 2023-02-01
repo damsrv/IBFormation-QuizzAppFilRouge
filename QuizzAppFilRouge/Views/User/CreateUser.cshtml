@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @model CreateUserViewModel;
-
+@using QuizzAppFilRouge.Data
 
 @{
     ViewData["Title"] = "Create User";
@@ -12,13 +12,29 @@
 
     <div class="col-md-4">
 
+
+
+            
+
         <form method="post">
             <h4>Créer un nouveau User : </h4>
 
             <hr />
 
+
+
             <div asp-validation-summary="All" class="text-danger">
                 <div class="form-group">
+
+                    <label asp-for="RoleName" class="form-label">Choisir un rôle:</label>
+                    <select asp-for="RoleName" class="form-select" >
+                        @foreach (EnumRoles role in Enum.GetValues(typeof(EnumRoles)))
+                        {
+                                    <option value="@role">@role</option>
+                        }
+                    </select>
+                    <span asp-validation-for="RoleName" class="text-danger"></span>
+                    <hr />
                     <label asp-for="FirsName"> FirsName </label>
                     <input asp-for="FirsName" class="form-control" />
                     <span asp-validation-for="FirsName" class="text-danger"></span>

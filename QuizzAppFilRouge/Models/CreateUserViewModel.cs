@@ -17,8 +17,10 @@ namespace QuizzAppFilRouge.Models
         [DataType(DataType.EmailAddress)]
         [Required(ErrorMessage = "Veuillez entrer votre Email")]
         public string Email { get; set; }
-
-        public IdentityRole Role { get; set; }
+        
+        // Mettre une string et non un IdentityRole
+        // car ce qui est donné par le ViewModel est une string
+        public string RoleName { get; set; }
 
     }
 }

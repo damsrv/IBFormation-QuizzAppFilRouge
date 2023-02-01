@@ -72,6 +72,9 @@ namespace QuizzAppFilRouge.Controllers
                 {
                     // Créer le User dans la table UserInfo
                     createUserInfo(identityUser, viewModelUser);
+                    
+                    // TOTO : Créer le role correspondant
+
                     return RedirectToAction("Index");
                 }
             }
@@ -95,6 +98,12 @@ namespace QuizzAppFilRouge.Controllers
             identityUser.NormalizedEmail = identityUser.Email.ToUpper();
 
             return identityUser;
+
+        }
+
+        public void createUserRole  ()
+        {
+
 
         }
 

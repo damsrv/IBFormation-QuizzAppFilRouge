@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using QuizzAppFilRouge.Data;
 using QuizzAppFilRouge.Data.Entities;
 using QuizzAppFilRouge.Models.User;
+using System.Data;
 using System.Dynamic;
 
 namespace QuizzAppFilRouge.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
 
@@ -27,6 +30,7 @@ namespace QuizzAppFilRouge.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Applicant")]
         public IActionResult GetUserList()
         {
             // Besoin de cette ligne car si pas cette ligne la ligne d'en dessous

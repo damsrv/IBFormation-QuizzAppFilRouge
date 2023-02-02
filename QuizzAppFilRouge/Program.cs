@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QuizzAppFilRouge.Data;
-
+using QuizzAppFilRouge.Domain;
 
 namespace QuizzAppFilRouge
 {
@@ -23,6 +23,7 @@ namespace QuizzAppFilRouge
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>() // Ligne à ajouter pour faire fonctionner les roles.
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddScoped<IQuizzRepository, DbQuizzRepository>();
 
 
             builder.Services.AddControllersWithViews();

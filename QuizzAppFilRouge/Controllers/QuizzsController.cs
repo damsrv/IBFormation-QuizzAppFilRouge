@@ -9,32 +9,41 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuizzAppFilRouge.Data;
 using QuizzAppFilRouge.Data.Entities;
+using QuizzAppFilRouge.Domain;
 using QuizzAppFilRouge.Models.QuizzViewModel;
 
 namespace QuizzAppFilRouge.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    
     public class QuizzsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IQuizzRepository quizzsRepository;
 
         // Constructor
-        public QuizzsController(ApplicationDbContext context)
+        public QuizzsController(IQuizzRepository quizzsRepository)
         {
-            _context = context;
+            this.quizzsRepository = quizzsRepository;
         }
 
-        public async Task<IActionResult> Index()
+//////////////////////////////////////////////////////////////////////////////////////
+//// INDEX AND GETQUIZZS FUNCTIONS 
+//////////////////////////////////////////////////////////////////////////////////////
+
+        //OK
+        public IActionResult Index()
         {
             
             return View();
 
         }
 
+        //OK
         // GET: Quizzs
-        public async Task<IActionResult> GetQuizzs()
+        public IActionResult GetAllQuizzs()
         {
-            var quizzes = await _context.Quizzes.ToListAsync();
+
+            var quizzes = quizzsRepository.GetAll();
+              
             return View(quizzes);
 
         }
@@ -44,16 +53,12 @@ namespace QuizzAppFilRouge.Controllers
 //// DETAILS FUNCTIONS 
 //////////////////////////////////////////////////////////////////////////////////////
 
+        // OK
         // GET: Quizzs/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
-            if (id == null || _context.Quizzes == null)
-            {
-                return NotFound();
-            }
+            var quizz = quizzsRepository.Details(id);
 
-            var quizz = await _context.Quizzes
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (quizz == null)
             {
                 return NotFound();
@@ -62,77 +67,68 @@ namespace QuizzAppFilRouge.Controllers
             return View(quizz);
         }
 
-//////////////////////////////////////////////////////////////////////////////////////
-//// CREATE FUNCTIONS GET AND POST
-//////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////
+        ////// CREATE FUNCTIONS GET AND POST
+        ////////////////////////////////////////////////////////////////////////////////////////
 
-        // GET: Quizzs/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Quizzs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Notation,ValidationCode")] Quizz quizz)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(quizz);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(quizz);
-        }
+        //        // GET: Quizzs/Create
+        //        public IActionResult Create()
+        //        {
+        //            return View();
+        //        }
 
 
+        //        // POST: Quizzs/Create
+        //        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        //        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //        [HttpPost]
+        //        [ValidateAntiForgeryToken]
+        //        public async Task<IActionResult> Create(QuizzViewModel quizzViewModel)
+        //        {
+        //            // création du guid
+        //            var guid = Guid.NewGuid().ToString();
 
-//////////////////////////////////////////////////////////////////////////////////////
-//// EDIT FUNCTIONS GET AND POST
-//////////////////////////////////////////////////////////////////////////////////////
+        //            // TODO : Function qui Créer des questions 
+        //            // 
 
+
+        //            //if (ModelState.IsValid)
+        //            //{
+        //            //    _context.Add(quizz);
+        //            //    await _context.SaveChangesAsync();
+        //            //    return RedirectToAction(nameof(Index));
+        //            //}
+        //            //return View(quizz);
+        //            return View();
+        //        }
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////
+        ////// EDIT FUNCTIONS GET AND POST
+        ////////////////////////////////////////////////////////////////////////////////////////
+
+        //OK
         // GET: Quizzs/Edit/5
         public IActionResult Edit(int? id)
         {
+            var quizz = quizzsRepository.GetQuizzById(id);
 
-            if (id == null || _context.Quizzes == null)
+            // Est ce normal d'avoir à transformer l'objet en Viewmodel
+            // pour faire passer le modèle à la vue ??? 
+            var quizzViewModel = new QuizzViewModel
             {
-                return NotFound();
-            }
-
-
-            var quizz = _context.Quizzes
-                .Select(m => m)
-                .Where(m => m.Id == id)
-                .Include(p => );
-
-
-            //var quizz =
-            //     from quizzs in _context.Quizzes
-            //     join questionQuizzs in _context.QuestionQuizzs on quizzs.Id equals questionQuizzs.
-            //     select new
-            //     {
-            //         quizzInfo = quizzs,
-            //         questionsQuizz = questionQuizzs
-            //     };
-
-
+                Id = quizz.Id,
+                Notation = quizz.Notation,
+                ValidationCode = quizz.ValidationCode,
+            };
 
             if (quizz == null)
             {
                 return NotFound();
             }
-            //var quizzViewModel = new QuizzViewModel
-            //{
-            //    Id = quizz.Id,
-            //    Notation = quizz.Notation,
-            //    ValidationCode = quizz.ValidationCode,
-            //};
 
-            return View(quizz);
+            return View(quizzViewModel);
 
         }
 
@@ -142,9 +138,12 @@ namespace QuizzAppFilRouge.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(QuizzViewModel quizzViewModel)
+        public IActionResult Edit(QuizzViewModel quizzViewModel)
         {
 
+            // Est ce normal d'avoir à recaster le view model 
+            // en object Quizz pour envoyer la modif vers la base
+            // Y'a t'il une autre méthode ???
             var quizz = new Quizz
             {
                 Id = quizzViewModel.Id,
@@ -156,12 +155,12 @@ namespace QuizzAppFilRouge.Controllers
             {
                 try
                 {
-                    _context.Update(quizz);
-                    await _context.SaveChangesAsync();
+                    quizzsRepository.Edit(quizz);
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!QuizzExists(quizz.Id))
+                    if (!quizzsRepository.QuizzExists(quizz.Id))
                     {
                         return NotFound();
                     }
@@ -172,57 +171,65 @@ namespace QuizzAppFilRouge.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            var errors = ModelState.Select(x => x.Value.Errors)
-                       .Where(y => y.Count > 0)
-                       .ToList();
+            //var errors = ModelState.Select(x => x.Value.Errors)
+            //           .Where(y => y.Count > 0)
+            //           .ToList();
             return RedirectToAction(nameof(Index));
         }
 
 
-//////////////////////////////////////////////////////////////////////////////////////
-//// DELETE FUNCTIONS GET AND POST
-//////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////
+        ////// DELETE FUNCTIONS GET AND POST
+        ////////////////////////////////////////////////////////////////////////////////////////
 
-        // GET: Quizzs/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Quizzes == null)
-            {
-                return NotFound();
-            }
+        //        // GET: Quizzs/Delete/5
+        //        public async Task<IActionResult> Delete(int? id)
+        //        {
+        //            if (id == null || _context.Quizzes == null)
+        //            {
+        //                return NotFound();
+        //            }
 
-            var quizz = await _context.Quizzes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (quizz == null)
-            {
-                return NotFound();
-            }
+        //            var quizz = await _context.Quizzes
+        //                .FirstOrDefaultAsync(m => m.Id == id);
+        //            if (quizz == null)
+        //            {
+        //                return NotFound();
+        //            }
 
-            return View(quizz);
-        }
+        //            return View(quizz);
+        //        }
 
-        // POST: Quizzs/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Quizzes == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Quizzes'  is null.");
-            }
-            var quizz = await _context.Quizzes.FindAsync(id);
-            if (quizz != null)
-            {
-                _context.Quizzes.Remove(quizz);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //        // POST: Quizzs/Delete/5
+        //        [HttpPost, ActionName("Delete")]
+        //        [ValidateAntiForgeryToken]
+        //        public async Task<IActionResult> DeleteConfirmed(int id)
+        //        {
+        //            if (_context.Quizzes == null)
+        //            {
+        //                return Problem("Entity set 'ApplicationDbContext.Quizzes'  is null.");
+        //            }
+        //            var quizz = await _context.Quizzes.FindAsync(id);
+        //            if (quizz != null)
+        //            {
+        //                _context.Quizzes.Remove(quizz);
+        //            }
 
-        private bool QuizzExists(int id)
-        {
-          return (_context.Quizzes?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        //            await _context.SaveChangesAsync();
+        //            return RedirectToAction(nameof(Index));
+        //        }
+
+
+
+
+
+
+
+
     }
+
+
+
+
+
 }

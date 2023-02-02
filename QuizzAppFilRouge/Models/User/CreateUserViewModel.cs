@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace QuizzAppFilRouge.Models
+namespace QuizzAppFilRouge.Models.User
 {
     public class CreateUserViewModel
     {
@@ -17,7 +17,7 @@ namespace QuizzAppFilRouge.Models
         [DataType(DataType.EmailAddress)]
         [Required(ErrorMessage = "Veuillez entrer votre Email")]
         public string Email { get; set; }
-        
+
         // Mettre une string et non un IdentityRole
         // car ce qui est donné par le ViewModel est une string
         public string RoleName { get; set; }

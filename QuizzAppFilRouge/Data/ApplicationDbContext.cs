@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Identity.Client;
 using QuizzAppFilRouge.Data.Entities;
+using System.Reflection.Emit;
 
 namespace QuizzAppFilRouge.Data
 {
@@ -29,11 +30,12 @@ namespace QuizzAppFilRouge.Data
 
 
 
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            
+
         }
     }
 }

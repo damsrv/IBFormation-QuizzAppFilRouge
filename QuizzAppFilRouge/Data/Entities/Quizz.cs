@@ -18,5 +18,5 @@ namespace QuizzAppFilRouge.Data.Entities
 
         public virtual ICollection<Question> Questions { get; set; }
 
-}
+    }
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using QuizzAppFilRouge.Data;
 using QuizzAppFilRouge.Data.Entities;
-using QuizzAppFilRouge.Models;
+using QuizzAppFilRouge.Models.User;
 using System.Dynamic;
 
 namespace QuizzAppFilRouge.Controllers

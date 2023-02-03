@@ -236,7 +236,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasIndex("QuizzesId");
 
-                    b.ToTable("QuestionQuizz");
+                    b.ToTable("QuestionQuizz", (string)null);
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.Answer", b =>
@@ -261,7 +261,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers");
+                    b.ToTable("Answers", (string)null);
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.Passage", b =>
@@ -279,7 +279,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasIndex("IdentityUserId");
 
-                    b.ToTable("Passages");
+                    b.ToTable("Passages", (string)null);
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.Question", b =>
@@ -301,7 +301,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.Quizz", b =>
@@ -320,7 +320,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Quizzes");
+                    b.ToTable("Quizzes", (string)null);
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.Response", b =>
@@ -337,7 +337,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Response");
+                    b.ToTable("Response", (string)null);
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.UserInfo", b =>
@@ -363,7 +363,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasIndex("IdentityUserId");
 
-                    b.ToTable("UserInfos");
+                    b.ToTable("UserInfos", (string)null);
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.Verification", b =>
@@ -383,7 +383,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasIndex("ResponseId");
 
-                    b.ToTable("Verification");
+                    b.ToTable("Verification", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

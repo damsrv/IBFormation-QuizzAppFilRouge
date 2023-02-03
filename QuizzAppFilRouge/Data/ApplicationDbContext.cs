@@ -22,7 +22,7 @@ namespace QuizzAppFilRouge.Data
 
         public DbSet<Answer> Answers { get; set; }
 
-        public DbSet<Verification> Verification { get; set; }
+        public DbSet<Response> Responses { get; set; }
 
         public DbSet<UserInfo> UserInfos { get; set; }
 

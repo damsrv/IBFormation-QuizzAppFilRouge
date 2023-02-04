@@ -30,7 +30,7 @@ namespace QuizzAppFilRouge.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Applicant")]
+
         public IActionResult GetUserList()
         {
             // Besoin de cette ligne car si pas cette ligne la ligne d'en dessous

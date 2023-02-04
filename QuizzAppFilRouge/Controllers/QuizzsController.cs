@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using QuizzAppFilRouge.Data;
 using QuizzAppFilRouge.Data.Entities;
@@ -25,10 +26,6 @@ namespace QuizzAppFilRouge.Controllers
             this.quizzsRepository = quizzsRepository;
         }
 
-//////////////////////////////////////////////////////////////////////////////////////
-//// INDEX AND GETQUIZZS FUNCTIONS 
-//////////////////////////////////////////////////////////////////////////////////////
-
         //OK
         public IActionResult Index()
         {
@@ -37,34 +34,64 @@ namespace QuizzAppFilRouge.Controllers
 
         }
 
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+//// GETALLQUIZZS AND GETALLQUIZZSBYID (A FAIRE) FUNCTIONS 
+//////////////////////////////////////////////////////////////////////////////////////
+
         //OK
         // GET: Quizzs
-        public IActionResult GetAllQuizzs()
+        public async Task<IActionResult> GetAllQuizzs()
         {
 
-            var quizzes = quizzsRepository.GetAll();
+            var quizzes = await quizzsRepository.GetAll();
+
+            var listQuizzViewModel = new List<QuizzViewModel>();
+
+            foreach (var quizz in quizzes)
+            {
+
+                listQuizzViewModel.Add(new QuizzViewModel
+                {
+                    Id = quizz.Id,
+                    Notation = quizz.Notation,
+                    ValidationCode = quizz.ValidationCode,
+                    QuizzLevel = quizz.QuizzLevel,
+                    QuizzCreator = quizz.QuizzCreator,
+
+                });
+
+            }
               
-            return View(quizzes);
+            return View(listQuizzViewModel);
 
         }
 
 
 //////////////////////////////////////////////////////////////////////////////////////
-//// DETAILS FUNCTIONS 
+//// DETAILS FUNCTIONS OK
 //////////////////////////////////////////////////////////////////////////////////////
 
         // OK
         // GET: Quizzs/Details/5
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
-            var quizz = quizzsRepository.Details(id);
+            var quizz = await quizzsRepository.Details(id);
 
             if (quizz == null)
             {
                 return NotFound();
             }
 
-            return View(quizz);
+            var quizzViewModel = new QuizzViewModel
+            {
+                Id = quizz.Id,
+                Notation = quizz.Notation,
+                ValidationCode = quizz.ValidationCode,
+            };
+
+            return View(quizzViewModel);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -104,15 +131,15 @@ namespace QuizzAppFilRouge.Controllers
 
 
 
-        ////////////////////////////////////////////////////////////////////////////////////////
-        ////// EDIT FUNCTIONS GET AND POST
-        ////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+////// EDIT FUNCTIONS GET AND POST OK
+////////////////////////////////////////////////////////////////////////////////////////
 
         //OK
         // GET: Quizzs/Edit/5
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            var quizz = quizzsRepository.GetQuizzById(id);
+            var quizz = await quizzsRepository.GetQuizzById(id);
 
             // Est ce normal d'avoir à transformer l'objet en Viewmodel
             // pour faire passer le modèle à la vue ??? 
@@ -138,7 +165,7 @@ namespace QuizzAppFilRouge.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(QuizzViewModel quizzViewModel)
+        public async Task<IActionResult> Edit(QuizzViewModel quizzViewModel)
         {
 
             // Est ce normal d'avoir à recaster le view model 
@@ -160,7 +187,8 @@ namespace QuizzAppFilRouge.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!quizzsRepository.QuizzExists(quizz.Id))
+                    var exist = await quizzsRepository.QuizzExists(quizz.Id);
+                    if (!exist)
                     {
                         return NotFound();
                     }
@@ -178,46 +206,50 @@ namespace QuizzAppFilRouge.Controllers
         }
 
 
-        ////////////////////////////////////////////////////////////////////////////////////////
-        ////// DELETE FUNCTIONS GET AND POST
-        ////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+////// DELETE FUNCTIONS GET AND POST OK
+////////////////////////////////////////////////////////////////////////////////////////
 
-        //        // GET: Quizzs/Delete/5
-        //        public async Task<IActionResult> Delete(int? id)
-        //        {
-        //            if (id == null || _context.Quizzes == null)
-        //            {
-        //                return NotFound();
-        //            }
+        // GET: Quizzs/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
 
-        //            var quizz = await _context.Quizzes
-        //                .FirstOrDefaultAsync(m => m.Id == id);
-        //            if (quizz == null)
-        //            {
-        //                return NotFound();
-        //            }
+            var quizz = await quizzsRepository.GetQuizzById(id);
 
-        //            return View(quizz);
-        //        }
+            if (quizz == null)
+            {
+                return NotFound();
+            }
 
-        //        // POST: Quizzs/Delete/5
-        //        [HttpPost, ActionName("Delete")]
-        //        [ValidateAntiForgeryToken]
-        //        public async Task<IActionResult> DeleteConfirmed(int id)
-        //        {
-        //            if (_context.Quizzes == null)
-        //            {
-        //                return Problem("Entity set 'ApplicationDbContext.Quizzes'  is null.");
-        //            }
-        //            var quizz = await _context.Quizzes.FindAsync(id);
-        //            if (quizz != null)
-        //            {
-        //                _context.Quizzes.Remove(quizz);
-        //            }
 
-        //            await _context.SaveChangesAsync();
-        //            return RedirectToAction(nameof(Index));
-        //        }
+            //var quizzViewModel = new QuizzViewModel
+            //{
+            //    Id = quizz.Id,
+            //    Notation = quizz.Notation,
+            //    ValidationCode = quizz.ValidationCode,
+            //};
+
+            return View(quizz);
+        }
+
+        // OK DELETE bien en cascade
+        // Tout ce qui est contenue dans passage,response et question quizz
+        // POST: Quizzs/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+
+            if (quizzsRepository.returnContext().Quizzes == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Quizzes'  is null.");
+            }
+
+            await quizzsRepository.Delete(id);
+
+
+            return RedirectToAction(nameof(Index));
+        }
 
 
 

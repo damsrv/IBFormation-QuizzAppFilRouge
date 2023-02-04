@@ -35,14 +35,14 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="QuestionLevel" class="control-label">Niveau du Questionnaire</label>
-                    <select asp-for="QuestionLevel" class="form-select" >
-                    @foreach (QuestionLevelEnum level in QuestionLevelEnum.GetValues(typeof(QuestionLevelEnum)))
+                <label asp-for="QuizzLevel" class="control-label">Niveau du Questionnaire</label>
+                    <select asp-for="QuizzLevel" class="form-select" >
+                    @foreach (QuizzLevelEnum level in QuizzLevelEnum.GetValues(typeof(QuizzLevelEnum)))
                     {
                             <option value="@level">@level</option>
                         }
                     </select>
-                <span asp-validation-for="QuestionLevel" class="text-danger"></span>
+                <span asp-validation-for="QuizzLevel" class="text-danger"></span>
             </div>
 
             <div class="form-group">

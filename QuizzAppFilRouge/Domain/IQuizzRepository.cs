@@ -8,16 +8,19 @@ namespace QuizzAppFilRouge.Domain
     public interface IQuizzRepository
     {
 
-        IEnumerable<Quizz> GetAll();
+        Task<IEnumerable<Quizz>> GetAll();
 
-        Quizz Details(int? id);
+        Task<Quizz> Details(int? id);
 
-        Quizz GetQuizzById(int? id);
+        Task<Quizz> GetQuizzById(int? id);
 
-        void Edit(Quizz quizz);
+        Task Edit(Quizz quizz);
 
-        bool QuizzExists(int id);
+        Task<bool> QuizzExists(int id);
 
+        Task Delete(int id);
+
+        ApplicationDbContext returnContext ();
     }
 
 
@@ -32,49 +35,72 @@ namespace QuizzAppFilRouge.Domain
             this.context = context;
         }
 
-        public IEnumerable<Quizz> GetAll()
+        public async Task<IEnumerable<Quizz>> GetAll()
         {
-            var quizzs = context.Quizzes.ToList();
+            var quizzs = await context.Quizzes.ToListAsync();
             return quizzs;
         }
 
         // TODO : Method GetAllByRecruiter
 
-        public Quizz Details(int? id)
+        public async Task<Quizz> Details(int? id)
         {
 
-            var quizz = context.Quizzes
-                .FirstOrDefault(m => m.Id == id);
+            var quizz = await context.Quizzes
+                .FirstOrDefaultAsync(m => m.Id == id);
             
             return quizz;
 
         }
 
-        public Quizz GetQuizzById(int? id)
+        public async Task<Quizz> GetQuizzById(int? id)
         {
+            // Permet de récupéré toute les infos d'un QUizz
+            var quizz = await context.Quizzes
+            .Include(quizz => quizz.Passages) // Le include permet de faire des Jointures
+            .Include(question => question.Questions)
+            .Include(response => response.Responses)
+            .Include(user => user.QuizzCreator)
+            .FirstOrDefaultAsync(quizz => quizz.Id == id);
 
-            var quizz = context.Quizzes
-            .Select(m => m)
-            .Where(quizz => quizz.Id == id)
-            //.Include(quizz => quizz.Passages) // Le include permet de faire des Jointures
-            //.Include(question => question.Questions)
-            .ToList();
 
+            //var quizz = context.Quizzes
+            //    .FirstOrDefaultAsync(quizz => quizz.Id == id);
 
-            return quizz[0];
+            return quizz;
 
         }
 
-        public void Edit(Quizz quizz)
+        public async Task Edit(Quizz quizz)
         {
             context.Update(quizz);
             context.SaveChanges();
         }
 
 
-        public bool QuizzExists(int id)
+        public async Task<bool> QuizzExists(int id)
         {
-            return (context.Quizzes?.Any(e => e.Id == id)).GetValueOrDefault();
+            var exist = await context.Quizzes.AnyAsync(e => e.Id == id);
+            
+            return exist;
+        }
+
+        public async Task Delete(int id)
+        {
+
+            var quizz = await context.Quizzes.FindAsync(id);
+
+            if (quizz != null)
+            {
+                context.Quizzes.Remove(quizz);
+            }
+
+            await context.SaveChangesAsync();
+        }
+
+        public ApplicationDbContext returnContext()
+        {
+            return context;
         }
     }
 

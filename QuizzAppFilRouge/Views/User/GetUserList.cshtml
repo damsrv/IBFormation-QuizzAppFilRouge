@@ -1,7 +1,8 @@
 ﻿@using QuizzAppFilRouge.Data.Entities
 @using QuizzAppFilRouge.Data
+@using QuizzAppFilRouge.Models.User;
 
-@model IEnumerable<UserInfo>
+@model IEnumerable<UserViewModel>
 
 
     <h1>List of User</h1>
@@ -15,8 +16,12 @@
 }
     <thead>
         <tr>
-            <td> Id</td>
-            <td> Name</td>
+            <td> Id </td>
+            <td> Nom </td>
+            <td> Prenom </td>
+            <td> Email </td>
+            <td> Date de naissance </td>
+
         </tr>
     </thead>
 
@@ -26,12 +31,12 @@
     {
         var i = 0;
             <tr>
+                <td>@user.Id</td>
                 <td>@user.FirstName</td>
                 <td>@user.LastName</td>
-                <td>@user.IdentityUser.Id</td>
-                <td>@user.IdentityUser.Email</td>
+                <td>@user.Email</td>
+                <td>@user.BirthDate</td>
                 <br />
-
             </tr>
     }
     </tbody>

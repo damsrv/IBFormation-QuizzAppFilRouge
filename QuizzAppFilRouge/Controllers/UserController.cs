@@ -31,19 +31,31 @@ namespace QuizzAppFilRouge.Controllers
         }
 
 
+//////////////////////////////////////////////////////////////////////////////////////
+//// GETUSERLIST FUNCTIONS 
+//////////////////////////////////////////////////////////////////////////////////////
+
+
         public IActionResult GetUserList()
         {
-            // Besoin de cette ligne car si pas cette ligne la ligne d'en dessous
-            // ne récupèrer pas automatiquement le user associé via la foreign key
-            // dans la table AspNetUser
-            var listIdentityUser = userManager.Users.ToList(); 
+            var listUsersViewModel = new List<UserViewModel>();
 
-            var listUserInfos = context.UserInfos.Select( user => user).ToList();
- 
+            var listApplicationUsers = context.ApplicationUsers.ToList();
 
-            return View(listUserInfos);
+
+            foreach (var user in listApplicationUsers)
+            {
+                
+                listUsersViewModel.Add(createUserViewModel(user));    
+            }
+
+            return View(listUsersViewModel);
         }
 
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //// CREATE USER GET AND POST FUNCTIONS OK
+        //////////////////////////////////////////////////////////////////////////////////////
         [HttpGet]
         public IActionResult CreateUser()
         {
@@ -52,21 +64,26 @@ namespace QuizzAppFilRouge.Controllers
 
         /**
         * Méthode Post de création des Users
-        * Va créer un IdentityUser ( qui va peupler la table AspNetUsers) et un UserInfo ( qui va peupler la table UserInfos) 
+        * Va créer un ApplicationUser ( qui va peupler la table AspNetUsers)
         * Se sert du CreateUserViewModel (viewmodel lié au formulaire) pour obtenir les données du User à créer.
         **/
         [HttpPost]
-        public async Task<IActionResult> CreateUser(CreateUserViewModel viewModelUser)
+        public async Task<IActionResult> CreateUser(UserViewModel viewModelUser)
         {
+
+            var applicationUser = createAppUser(viewModelUser);
+
             if (ModelState.IsValid)
             {
                 // Utilisation de l'objet UserManager auquel on passe un objet de type IdentityUser.
                 // Appel de la fonction CreateAsync qui va tenter d'enregistrer le nouvel user dans la base (table ASPNETUSERS)
-                var identityUser = createIdentityUser(viewModelUser);
-                IdentityResult identityResult = await userManager.CreateAsync(identityUser);
+                
+                
+
+                IdentityResult identityResult = await userManager.CreateAsync(applicationUser);
 
                 // Si email déja utilisé dans base (la requete à échouée)
-                if (identityResult.Succeeded == false) 
+                if (identityResult.Succeeded == false)
                 {
                     ModelState.AddModelError("Email", "L'email est déja utilisé ");
                     return View();
@@ -74,9 +91,6 @@ namespace QuizzAppFilRouge.Controllers
                 // Si pas déja email dans la base (la requete à réussie)
                 else
                 {
-                    // Créer le User dans la table UserInfo
-                    createUserInfo(identityUser, viewModelUser);
-                    
                     // TOTO : Créer le role correspondant
 
                     return RedirectToAction("Index");
@@ -84,24 +98,59 @@ namespace QuizzAppFilRouge.Controllers
             }
             else
             {
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
                 return View();
-            }    
+            }
         }
 
+
+//////////////////////////////////////////////////////////////////////////////////////
+//// OTHER FUNCTIONS 
+//////////////////////////////////////////////////////////////////////////////////////
+        
         /**
-         * Créer l'objet IdentityUser qui va aller peupler la table AspNetUser  
+         * Créer l'objet ApplicationUser qui va aller peupler la table AspNetUser  
          */
-        public IdentityUser createIdentityUser(CreateUserViewModel viewModelUser)
+        public ApplicationUser createAppUser(UserViewModel viewModelUser)
         {
-            IdentityUser identityUser = new IdentityUser();
+            ApplicationUser applicationUser = new ApplicationUser();
 
             // Création du User dans table AspNetUsers
-            identityUser.Email= viewModelUser.Email;
-            identityUser.UserName = viewModelUser.Email;
-            identityUser.EmailConfirmed = true;
-            identityUser.NormalizedEmail = identityUser.Email.ToUpper();
 
-            return identityUser;
+            applicationUser.Id = Guid.NewGuid().ToString();
+            applicationUser.Email = viewModelUser.Email;
+            applicationUser.UserName = viewModelUser.Email;
+            applicationUser.FirstName = viewModelUser.FirstName;
+            applicationUser.LastName = viewModelUser.LastName;
+            applicationUser.BirthDate = viewModelUser.BirthDate;
+            applicationUser.EmailConfirmed = true;
+            applicationUser.NormalizedEmail = viewModelUser.Email.ToUpper();
+            applicationUser.PhoneNumberConfirmed = false;
+            applicationUser.TwoFactorEnabled = false;
+
+
+            // Pas besoin de créer de Password pour les Candidat (car vont se connecter indirectement)
+            // A faire ROLE
+            return applicationUser;
+
+        }
+
+
+        /**
+        * Créer les Objets UserViewModel qui sont passées à la vue  
+        */
+        public UserViewModel createUserViewModel(ApplicationUser applicationUser)
+        {
+            UserViewModel userViewModel = new UserViewModel();
+
+            userViewModel.Id = applicationUser.Id;
+
+            userViewModel.FirstName = applicationUser.FirstName;
+            userViewModel.LastName = applicationUser.LastName;
+            userViewModel.BirthDate = applicationUser.BirthDate;
+            userViewModel.Email = applicationUser.Email;
+
+            return userViewModel;
 
         }
 
@@ -111,25 +160,6 @@ namespace QuizzAppFilRouge.Controllers
 
         }
 
-        /**
-         * Créer l'objet UserInfo qui va aller peupler la table UserInfo
-         */
-        public void createUserInfo(IdentityUser identityUser, CreateUserViewModel viewModelUser)
-        {
-            
-            UserInfo userInfo = new UserInfo
-            {
-                FirstName = viewModelUser.FirsName,
-                LastName = viewModelUser.FirsName,
-                IdentityUser = identityUser, // correspont à la foreign key qui lie AspNetUsers et UserInfos
-            };
-
-            // Ajout infos dans table UserInfos
-            context.UserInfos.Add(userInfo);
-            context.SaveChanges();
-
-            
-        }
 
     }
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Identity.Client;
 using QuizzAppFilRouge.Data.Entities;
 using System.Reflection.Emit;
@@ -24,7 +25,9 @@ namespace QuizzAppFilRouge.Data
 
         public DbSet<Response> Responses { get; set; }
 
-        public DbSet<UserInfo> UserInfos { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+
 
 
 
@@ -34,7 +37,18 @@ namespace QuizzAppFilRouge.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            
+
+            builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
+        }
+    }
+
+    public class ApplicationUserEntityConfiguration : IEntityTypeConfiguration<ApplicationUser>
+    {
+        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
+        {
+            builder.Property(u=>u.FirstName).HasMaxLength(75);
+            builder.Property(u=>u.LastName).HasMaxLength(75);
+            builder.Property(u => u.BirthDate);
 
         }
     }

@@ -16,11 +16,19 @@ namespace QuizzAppFilRouge.Models.QuizzViewModel
 
         public IdentityUser QuizzCreator { get; set; }
 
+        //public UserInfo UserInfos { get; set; }
+
         public int NombreQuestions { get; set; } 
 
         public int NombreQuestionLibres { get; set; }   
 
         public QuizzLevelEnum QuizzLevel { get; set; }
+
+        public ICollection<Passage> Passages { get; set; }
+
+        public ICollection<Question> Questions { get; set; }
+
+        public ICollection<Response> Responses { get; set; }
 
 
 

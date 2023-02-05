@@ -222,12 +222,17 @@ namespace QuizzAppFilRouge.Controllers
             }
 
 
-            //var quizzViewModel = new QuizzViewModel
-            //{
-            //    Id = quizz.Id,
-            //    Notation = quizz.Notation,
-            //    ValidationCode = quizz.ValidationCode,
-            //};
+            var quizzViewModel = new QuizzViewModel
+            {
+                Id = quizz.Id,
+                Notation = quizz.Notation,
+                ValidationCode = quizz.ValidationCode,
+                QuizzCreator= quizz.QuizzCreator,   
+                QuizzLevel= quizz.QuizzLevel,
+                Passages = quizz.Passages,
+                //UserInfos= quizz.UserInfos,  
+
+            };
 
             return View(quizz);
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuizzAppFilRouge.Data;
 using QuizzAppFilRouge.Data.Entities;
@@ -21,6 +22,8 @@ namespace QuizzAppFilRouge.Domain
         Task Delete(int id);
 
         ApplicationDbContext returnContext ();
+
+        Task<UserInfo> GetUserInfoById(string identityUserId);
     }
 
 
@@ -37,11 +40,31 @@ namespace QuizzAppFilRouge.Domain
 
         public async Task<IEnumerable<Quizz>> GetAll()
         {
-            var quizzs = await context.Quizzes.ToListAsync();
+
+            var quizzs = await context.Quizzes
+                .Include(quizz => quizz.Passages)// Le include permet de faire des Jointures
+                .Include(user => user.QuizzCreator)
+                .ToListAsync();
+
+            //foreach (var quizz in quizzs)
+            //{
+                
+            //    var passage = quizz.Passages.ToList();
+
+            //    var identityUserId = passage[0].IdentityUserId;
+
+            //    var userInfo = await GetUserInfoById(identityUserId);
+
+
+            //}
+
+            //var userInfo = GetUserInfoById(quizz)
+
+            //var quizzs = await context.Quizzes.ToListAsync();
             return quizzs;
         }
 
-        // TODO : Method GetAllByRecruiter
+        // TODO : Method GetAllByRecruiter (for recruiter only cos admin can see everything)
 
         public async Task<Quizz> Details(int? id)
         {
@@ -101,6 +124,14 @@ namespace QuizzAppFilRouge.Domain
         public ApplicationDbContext returnContext()
         {
             return context;
+        }
+
+        public async Task<UserInfo> GetUserInfoById(string identityUserId)
+        {
+            var userInfos = await context.UserInfos
+                .FirstOrDefaultAsync(userInfos => userInfos.IdentityUser.Id == identityUserId);
+
+            return userInfos;
         }
     }
 

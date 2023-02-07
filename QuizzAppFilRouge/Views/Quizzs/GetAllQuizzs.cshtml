@@ -28,7 +28,7 @@
                 @Html.DisplayNameFor(model => model.QuizzLevel)
             </th>
             <th>
-                @*@Html.DisplayNameFor(model => model.CreatorId)*@ 
+                @Html.DisplayNameFor(model => model.QuizzCreator)
             </th>
             <th></th>
         </tr>
@@ -49,7 +49,7 @@
                 @item.QuizzLevel
             </td>
             <td>
-                @*@item.CreatorId*@
+                @item.QuizzCreator
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -49,6 +49,8 @@ namespace QuizzAppFilRouge.Data
             builder.Property(u=>u.FirstName).HasMaxLength(75);
             builder.Property(u=>u.LastName).HasMaxLength(75);
             builder.Property(u => u.BirthDate);
+            builder.Property(u => u.HandleBy).HasMaxLength(450);
+
 
         }
     }

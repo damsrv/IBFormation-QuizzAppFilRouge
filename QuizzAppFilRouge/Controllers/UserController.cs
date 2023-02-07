@@ -91,7 +91,8 @@ namespace QuizzAppFilRouge.Controllers
                 // Si pas déja email dans la base (la requete à réussie)
                 else
                 {
-                    // TOTO : Créer le role correspondant
+                    // TODO : Créer le role correspondant
+                    // TODO : Réfléchir au cas de connexion hors admin ? Faut t'il que les recruteurs puissent s'identifier ou pas ? 
 
                     return RedirectToAction("Index");
                 }
@@ -126,8 +127,8 @@ namespace QuizzAppFilRouge.Controllers
             applicationUser.EmailConfirmed = true;
             applicationUser.NormalizedEmail = viewModelUser.Email.ToUpper();
             applicationUser.PhoneNumberConfirmed = false;
-            applicationUser.TwoFactorEnabled = false;
-
+            applicationUser.TwoFactorEnabled = false; 
+            applicationUser.PasswordHash = viewModelUser.Password; // Problème créer le mot de passe en dur dans la base.
 
             // Pas besoin de créer de Password pour les Candidat (car vont se connecter indirectement)
             // A faire ROLE

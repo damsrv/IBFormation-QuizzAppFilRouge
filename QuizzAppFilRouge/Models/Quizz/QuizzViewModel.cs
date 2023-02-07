@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using QuizzAppFilRouge.Data.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuizzAppFilRouge.Models.QuizzViewModel
 {
@@ -14,13 +16,12 @@ namespace QuizzAppFilRouge.Models.QuizzViewModel
         [StringLength(100)]
         public string? ValidationCode { get; set; }
 
-        public IdentityUser QuizzCreator { get; set; }
+        [ForeignKey("ApplicationUser")]
+        public virtual ApplicationUser QuizzCreator { get; set; }
 
-        //public UserInfo UserInfos { get; set; }
+        public int TotalQuestionNumber { get; set; } 
 
-        public int NombreQuestions { get; set; } 
-
-        public int NombreQuestionLibres { get; set; }   
+        public int FreeQuestionPercentage { get; set; }   
 
         public QuizzLevelEnum QuizzLevel { get; set; }
 
@@ -30,6 +31,11 @@ namespace QuizzAppFilRouge.Models.QuizzViewModel
 
         public ICollection<Response> Responses { get; set; }
 
+        public List<SelectListItem> HandledByMeCandidates{ get; set; }
+
+        public string selectedCandidateId { get; set; }
+
+        public DateTime PassageDate { get; set; }
 
 
 

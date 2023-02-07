@@ -12,26 +12,23 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="NombreQuestions" class="control-label"></label>
-                    <select asp-for="NombreQuestions" class="form-select" >
+                <label asp-for="TotalQuestionNumber" class="control-label"></label>
+                    <select asp-for="TotalQuestionNumber" class="form-select" >
                         <option value="10">10</option>
                         <option value="20">20</option>
                     </select>
-                <span asp-validation-for="NombreQuestions" class="text-danger"></span>
+                <span asp-validation-for="TotalQuestionNumber" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="NombreQuestionLibres" class="control-label"></label>
-                    <select asp-for="NombreQuestionLibres" class="form-select" >
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
+                <label asp-for="FreeQuestionPercentage" class="control-label"></label>
+                    <select asp-for="FreeQuestionPercentage" class="form-select" >
+                        <option value="10">10 %</option>
+                        <option value="20">20 %</option>
+
 
                     </select>
-                <span asp-validation-for="NombreQuestions" class="text-danger"></span>
+                <span asp-validation-for="TotalQuestionNumber" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -44,6 +41,19 @@
                     </select>
                 <span asp-validation-for="QuizzLevel" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="selectedCandidateId" class="control-label"> Associer à un candidat </label>
+                    <select asp-items="Model.HandledByMeCandidates" asp-for="selectedCandidateId" class="form-select" >
+                    </select>
+            </div>
+
+            <div class="form-group"> 
+                <label asp-for="PassageDate"> Date de passage programmée </label>
+                <input asp-for="PassageDate" class="form-control" />
+                <span asp-validation-for="PassageDate" class="text-danger"></span>
+            </div>
+
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

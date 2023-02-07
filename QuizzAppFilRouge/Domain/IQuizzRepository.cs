@@ -23,7 +23,14 @@ namespace QuizzAppFilRouge.Domain
 
         ApplicationDbContext returnContext ();
 
-        //Task<UserInfo> GetUserInfoById(string identityUserId);
+        Task Create(Quizz quizz);
+
+        //Task<int> calculateQuizzLevel(int quizzId);
+
+        //Task<List<ApplicationUser>> 
+
+        
+
     }
 
 
@@ -126,13 +133,16 @@ namespace QuizzAppFilRouge.Domain
             return context;
         }
 
-    //    public async Task<UserInfo> GetUserInfoById(string identityUserId)
-    //    {
-    //        var userInfos = await context.UserInfos
-    //            .FirstOrDefaultAsync(userInfos => userInfos.IdentityUser.Id == identityUserId);
+        public async Task Create(Quizz newQuizz)
+        {
+            await context.Quizzes.AddAsync(newQuizz);
+            context.SaveChanges();
 
-    //        return userInfos;
-    //    }
+
+        }
+
+
+
     }
 
 

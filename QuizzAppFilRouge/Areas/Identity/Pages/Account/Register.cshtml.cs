@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using QuizzAppFilRouge.Data.Entities;
 
 namespace QuizzAppFilRouge.Areas.Identity.Pages.Account
 {
@@ -70,6 +71,19 @@ namespace QuizzAppFilRouge.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            [Required]
+            [Display(Name = "Prenom")]
+            [StringLength(75, ErrorMessage = "Maximum 75 lettres svp")]
+
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Nom")]
+            [StringLength(75, ErrorMessage = "Maximum 75 lettres svp")]
+            public string LastName { get; set; }
+
+            // Pas besoin de mettre l'age car le formulaire de login ne concerne que les Recruiter et les Admins
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -114,9 +128,14 @@ namespace QuizzAppFilRouge.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
 
                 if (result.Succeeded)
                 {
@@ -154,11 +173,11 @@ namespace QuizzAppFilRouge.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private ApplicationUser CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {

@@ -23,7 +23,13 @@ namespace QuizzAppFilRouge
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>() // Ligne à ajouter pour faire fonctionner les roles.
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             builder.Services.AddScoped<IQuizzRepository, DbQuizzRepository>();
+
+            builder.Services.AddScoped<IUserRepository, DbUserRepository>();
+
+            builder.Services.AddScoped<IQuestionRepository, DbQuestionRepository>();
+
 
 
             builder.Services.AddControllersWithViews();

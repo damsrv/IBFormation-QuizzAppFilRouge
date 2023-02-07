@@ -27,5 +27,8 @@ namespace QuizzAppFilRouge.Models.User
         // car ce qui est donné par le ViewModel est une string
         public string RoleName { get; set; }
 
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
     }
 }

@@ -29,6 +29,8 @@ namespace QuizzAppFilRouge.Domain
 
         //Task<List<ApplicationUser>> 
 
+        Task<int> GetLastQuizzId();
+
         
 
     }
@@ -38,11 +40,14 @@ namespace QuizzAppFilRouge.Domain
     {
 
         private readonly ApplicationDbContext context;
+        private readonly IUserRepository userRepository;
+
 
         // Controller
-        public DbQuizzRepository(ApplicationDbContext context)
+        public DbQuizzRepository(ApplicationDbContext context, IUserRepository userRepository)
         {
             this.context = context;
+            this.userRepository = userRepository;
         }
 
         public async Task<IEnumerable<Quizz>> GetAll()
@@ -135,14 +140,28 @@ namespace QuizzAppFilRouge.Domain
 
         public async Task Create(Quizz newQuizz)
         {
-            await context.Quizzes.AddAsync(newQuizz);
+           // Solution avec Attach à permis de régler le bug dans lequel le programme
+           // essayait de créer une nouvelle entité User (ce qui engendrais un conflit de clé primaire unique)
+           // au lieu de simplement inscrire la valeur dans la colonne QuizzCreatorId FK qui pointe vers UserId
+           // Voir mail de Julien pour explication
+            context.Attach(newQuizz.QuizzCreator);
+
+            await context.Quizzes
+                .AddAsync(newQuizz);
+
             context.SaveChanges();
 
 
         }
 
+        public async Task<int> GetLastQuizzId()
+        {
+            var id = await context.Quizzes
+                .Select(quizz => quizz.Id)
+                .LastAsync();
 
-
+            return id;
+        }
     }
 
 

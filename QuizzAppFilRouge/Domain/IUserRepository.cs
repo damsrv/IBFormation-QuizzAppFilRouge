@@ -9,6 +9,7 @@ namespace QuizzAppFilRouge.Domain
     {
         Task<List<ApplicationUser>> GetUserHandledById(string id);
 
+        Task<ApplicationUser> GetUserById(string id);
 
     }
 
@@ -22,6 +23,16 @@ namespace QuizzAppFilRouge.Domain
             
             this.context = context;
 
+
+        }
+
+        public async Task<ApplicationUser> GetUserById(string id)
+        {
+            var user = await context.ApplicationUsers
+                .Where(user => user.Id == id)
+                .ToListAsync();
+
+            return user[0];
 
         }
 

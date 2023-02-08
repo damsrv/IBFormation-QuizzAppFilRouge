@@ -25,7 +25,7 @@ namespace QuizzAppFilRouge.Models.QuizzViewModel
 
         public QuizzLevelEnum QuizzLevel { get; set; }
 
-        public ICollection<Passage> Passages { get; set; }
+        public Passage Passages { get; set; }
 
         public ICollection<Question> Questions { get; set; }
 

@@ -297,26 +297,42 @@ namespace QuizzAppFilRouge.Controllers
             // ETAPES
             // Actuellement on à une liste de questions avec les réponses correspondantes
             // Il faut peupler les autres tables liées à questions
+
+            var responses = new List<Response>();
+
+            foreach (var question in randowQuestionsFinalList)
+            {
+                responses.Add(new Response
+                {
+                    Content = null,
+                    IdentityUserId = quizzViewModel.selectedCandidateId,
+                    QuestionId = question.Id,
+                });
+            }
+
+
+            // OK MARCHE NICKEL !!!!!
+            // PEUPLE BIEN TOUTE LES TABLES COMME IL FAUT !
+            // LE DELETE DU QUIZZ SUPPRIME BIEN TOUT EN CASCADE
             Quizz newQuizz = new Quizz
             {
                 Notation = 0,
                 ValidationCode = generateGuid(),
                 QuizzLevel = quizzViewModel.QuizzLevel,
                 QuizzCreator = userLogged,
-
+                Passages = new Passage
+                {
+                    IdentityUserId = quizzViewModel.selectedCandidateId,
+                    PassageDate = quizzViewModel.PassageDate,
+                },
+                Questions = randowQuestionsFinalList,
+                Responses = responses,
             };
 
             //1 aller peupler quizz
             await quizzsRepository.Create(newQuizz);
-            //2 récup id du quizz dernierement créé
 
-
-            // PROBLEME LORS CREATION DU QUIZZ
-            // IL ESSAYE DE CREER UNE ENTREE DANS TABLE USER
-            // PROBABLEMENT MAL GERER RELATION ENTRE LES DEUX ENTITES QUIZZ ET USER
-
-
-
+            // 
 
 
 

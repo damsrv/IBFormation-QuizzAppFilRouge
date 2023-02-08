@@ -8,19 +8,17 @@ namespace QuizzAppFilRouge.Data.Entities
     [Authorize]
     public class Quizz
     {
-        [ForeignKey("ApplicationUser")]
         public int Id { get; set; }
 
         public double? Notation { get; set; }
 
         public string? ValidationCode { get; set; }
 
-        [ForeignKey("ApplicationUser")] // ??
         public ApplicationUser QuizzCreator { get; set; }
 
         public QuizzLevelEnum QuizzLevel { get; set; }
 
-        public virtual ICollection<Passage> Passages { get; set; }
+        public virtual Passage Passages { get; set; }
 
         public virtual ICollection<Question> Questions { get; set; }
 

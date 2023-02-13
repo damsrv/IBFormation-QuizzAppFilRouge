@@ -18,6 +18,8 @@ namespace QuizzAppFilRouge.Data.Entities
 
         public QuizzLevelEnum QuizzLevel { get; set; }
 
+        public QuizzLangageEnum QuizzLangage { get; set; }
+
         public virtual Passage Passages { get; set; }
 
         public virtual ICollection<Question> Questions { get; set; }

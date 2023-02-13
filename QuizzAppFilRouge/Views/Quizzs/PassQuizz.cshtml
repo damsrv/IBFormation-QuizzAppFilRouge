@@ -1,0 +1,54 @@
+﻿@using QuizzAppFilRouge.Data.Entities;
+@using QuizzAppFilRouge.Models.QuizzViewModels;
+@model PassingQuizzViewModel?;
+
+
+<h1>Quizz n°@Model.QuizzViewModel.Id</h1>
+
+<h1>Question n°@Model.QuestionViewModel.ActualQuestionNumber / @Model.QuizzViewModel.TotalQuestionsQuizz</h1>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="PassQuizz">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div> 
+                @Model.QuestionViewModel.ActualQuestion.Content
+            </div>
+
+            @foreach (var answer in @Model.AnswerViewModel)
+            {
+                <label asp-for="@answer" class="control-label"> @answer.Content</label>
+                <input type="checkbox" name="@answer" />
+                    <span asp-validation-for="@answer" class="text-danger"></span>
+            }
+@*            <div class="form-group">
+                <label asp-for="" class="control-label"> Validation Code : </label>
+                <input type="checkbox" name="" />
+                <span asp-validation-for="" class="text-danger"></span>
+            </div>
+*@
+
+
+
+            <input type="submit" value="Valider" class="btn btn-primary" />
+
+        </form>
+        <h2>@TempData["AlertMessage"]</h2>
+        <h2>@TempData["SucessMessage"]</h2>
+
+    </div>
+
+</div>
+
+
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.Question)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdentityUser)
+                @Html.DisplayNameFor(model => model.ApplicationUser)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Quizz)
@@ -37,7 +37,7 @@
                 @Html.DisplayFor(modelItem => item.Question.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdentityUser.Id)
+                    @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Quizz.Id)

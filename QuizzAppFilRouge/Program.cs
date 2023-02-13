@@ -30,6 +30,9 @@ namespace QuizzAppFilRouge
 
             builder.Services.AddScoped<IQuestionRepository, DbQuestionRepository>();
 
+            builder.Services.AddScoped<IAnswerRepository, DbAnswerRepository>();
+
+
 
 
             builder.Services.AddControllersWithViews();

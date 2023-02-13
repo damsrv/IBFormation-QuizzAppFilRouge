@@ -1,5 +1,6 @@
 ﻿@using QuizzAppFilRouge.Data.Entities;
-@model QuizzAppFilRouge.Models.QuizzViewModel.QuizzViewModel
+@using QuizzAppFilRouge.Models.QuizzViewModels;
+@model QuizzViewModel
 
 @{
     ViewData["Title"] = "Créer un Quizz";
@@ -11,6 +12,7 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="TotalQuestionNumber" class="control-label"></label>
                     <select asp-for="TotalQuestionNumber" class="form-select" >
@@ -25,10 +27,8 @@
                     <select asp-for="FreeQuestionPercentage" class="form-select" >
                         <option value="10">10 %</option>
                         <option value="20">20 %</option>
-
-
                     </select>
-                <span asp-validation-for="TotalQuestionNumber" class="text-danger"></span>
+                <span asp-validation-for="FreeQuestionPercentage" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -43,9 +43,21 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="selectedCandidateId" class="control-label"> Associer à un candidat </label>
-                    <select asp-items="Model.HandledByMeCandidates" asp-for="selectedCandidateId" class="form-select" >
+                <label asp-for="QuizzLangage" class="control-label">Langage du Questionnaire</label>
+                    <select asp-for="QuizzLangage" class="form-select" >
+                    @foreach (QuizzLangageEnum level in QuizzLangageEnum.GetValues(typeof(QuizzLangageEnum)))
+                    {
+                                    <option value="@level">@level</option>
+                    }
                     </select>
+                <span asp-validation-for="QuizzLangage" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="selectedCandidateId" class="control-label"> Associer à un candidat </label>
+                <select asp-items="Model.HandledByMeCandidates" asp-for="selectedCandidateId" class="form-select" >
+                </select>
             </div>
 
             <div class="form-group"> 
@@ -53,6 +65,7 @@
                 <input asp-for="PassageDate" class="form-control" />
                 <span asp-validation-for="PassageDate" class="text-danger"></span>
             </div>
+
 
 
             <div class="form-group">

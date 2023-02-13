@@ -1,8 +1,9 @@
-﻿namespace QuizzAppFilRouge.Data.Entities
-{
-    public class Question
-    {
+﻿using QuizzAppFilRouge.Data.Entities;
 
+namespace QuizzAppFilRouge.Models.QuestionViewModels
+{
+    public class QuestionViewModel
+    {
         public int Id { get; set; }
 
         public string? Content { get; set; } // VARCHAR MAX
@@ -17,8 +18,9 @@
         public virtual ICollection<Quizz> Quizzes { get; set; }
 
         public virtual ICollection<Answer> Answers { get; set; }
+        public Question ActualQuestion { get; set; }
 
+        public int ActualQuestionNumber { get; set; }
 
     }
-
 }

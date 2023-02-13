@@ -22,7 +22,7 @@ namespace QuizzAppFilRouge.Controllers
         // GET: Responses
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Responses.Include(r => r.IdentityUser).Include(r => r.Question).Include(r => r.Quizz);
+            var applicationDbContext = _context.Responses.Include(r => r.ApplicationUser).Include(r => r.Question).Include(r => r.Quizz);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -35,7 +35,7 @@ namespace QuizzAppFilRouge.Controllers
             }
 
             var response = await _context.Responses
-                .Include(r => r.IdentityUser)
+                .Include(r => r.ApplicationUser)
                 .Include(r => r.Question)
                 .Include(r => r.Quizz)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -50,7 +50,7 @@ namespace QuizzAppFilRouge.Controllers
         // GET: Responses/Create
         public IActionResult Create()
         {
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["QuestionId"] = new SelectList(_context.Questions, "Id", "Id");
             ViewData["QuizzId"] = new SelectList(_context.Quizzes, "Id", "Id");
             return View();
@@ -61,7 +61,7 @@ namespace QuizzAppFilRouge.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Content,QuestionId,IdentityUserId,QuizzId")] Response response)
+        public async Task<IActionResult> Create([Bind("Id,Content,QuestionId,ApplicationUserId,QuizzId")] Response response)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace QuizzAppFilRouge.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", response.IdentityUserId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", response.ApplicationUserId);
             ViewData["QuestionId"] = new SelectList(_context.Questions, "Id", "Id", response.QuestionId);
             ViewData["QuizzId"] = new SelectList(_context.Quizzes, "Id", "Id", response.QuizzId);
             return View(response);
@@ -88,7 +88,7 @@ namespace QuizzAppFilRouge.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", response.IdentityUserId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", response.ApplicationUserId);
             ViewData["QuestionId"] = new SelectList(_context.Questions, "Id", "Id", response.QuestionId);
             ViewData["QuizzId"] = new SelectList(_context.Quizzes, "Id", "Id", response.QuizzId);
             return View(response);
@@ -99,7 +99,7 @@ namespace QuizzAppFilRouge.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,QuestionId,IdentityUserId,QuizzId")] Response response)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,QuestionId,ApplicationUserId,QuizzId")] Response response)
         {
             if (id != response.Id)
             {
@@ -126,7 +126,7 @@ namespace QuizzAppFilRouge.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", response.IdentityUserId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", response.ApplicationUserId);
             ViewData["QuestionId"] = new SelectList(_context.Questions, "Id", "Id", response.QuestionId);
             ViewData["QuizzId"] = new SelectList(_context.Quizzes, "Id", "Id", response.QuizzId);
             return View(response);
@@ -141,7 +141,7 @@ namespace QuizzAppFilRouge.Controllers
             }
 
             var response = await _context.Responses
-                .Include(r => r.IdentityUser)
+                .Include(r => r.ApplicationUser)
                 .Include(r => r.Question)
                 .Include(r => r.Quizz)
                 .FirstOrDefaultAsync(m => m.Id == id);

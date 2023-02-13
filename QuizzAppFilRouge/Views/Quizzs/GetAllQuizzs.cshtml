@@ -1,4 +1,4 @@
-﻿@using QuizzAppFilRouge.Models.QuizzViewModel
+﻿@using QuizzAppFilRouge.Models.QuizzViewModels
 
 
 @model IEnumerable<QuizzViewModel>
@@ -22,39 +22,47 @@
                 @Html.DisplayNameFor(model => model.Notation)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ValidationCode)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.QuizzLevel)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.QuizzCreator)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuizzLangage)
+            </th>
+            <th>
+                Candidat
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var quizz in Model) {
         <tr>
             <td>
-                @item.Id
+                @quizz.Id
             </td>
             <td>
-                @item.Notation
+                @quizz.Notation
             </td>
             <td>
-                @item.ValidationCode
+                @quizz.QuizzLevel
             </td>
             <td>
-                @item.QuizzLevel
+                @quizz.QuizzCreator
             </td>
             <td>
-                @item.QuizzCreator
+                @quizz.QuizzLangage
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @quizz.Passages.ApplicationUser.FirstName
+                @quizz.Passages.ApplicationUser.LastName
+
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@quizz.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@quizz.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@quizz.Id">Delete</a>
             </td>
         </tr>
 }

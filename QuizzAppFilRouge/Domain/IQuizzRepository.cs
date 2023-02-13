@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuizzAppFilRouge.Data;
 using QuizzAppFilRouge.Data.Entities;
+using QuizzAppFilRouge.Models.QuizzViewModels;
 
 namespace QuizzAppFilRouge.Domain
 {
@@ -31,7 +32,9 @@ namespace QuizzAppFilRouge.Domain
 
         Task<int> GetLastQuizzId();
 
-        
+        Task<bool> CheckValidationCode(QuizzViewModel quizzViewModel);
+
+        Task<string> GetValidationCode(int quizzId);
 
     }
 
@@ -55,6 +58,7 @@ namespace QuizzAppFilRouge.Domain
 
             var quizzs = await context.Quizzes
                 .Include(quizz => quizz.Passages)// Le include permet de faire des Jointures
+                    .ThenInclude(passage => passage.ApplicationUser)
                 .Include(user => user.QuizzCreator)
                 .ToListAsync();
 
@@ -93,7 +97,9 @@ namespace QuizzAppFilRouge.Domain
             // Permet de récupéré toute les infos d'un QUizz
             var quizz = await context.Quizzes
             .Include(quizz => quizz.Passages) // Le include permet de faire des Jointures
+                .ThenInclude(passage => passage.ApplicationUser)
             .Include(question => question.Questions)
+                .ThenInclude(question => question.Answers)
             .Include(response => response.Responses)
             .Include(user => user.QuizzCreator)
             .FirstOrDefaultAsync(quizz => quizz.Id == id);
@@ -161,6 +167,23 @@ namespace QuizzAppFilRouge.Domain
                 .LastAsync();
 
             return id;
+        }
+
+        public async Task<bool> CheckValidationCode(QuizzViewModel quizzViewModel)
+        {
+
+            return quizzViewModel.ValidationCode == quizzViewModel.EnteredValidationCode ? true : false;
+
+        }
+
+        public async Task<string> GetValidationCode( int quizzId )
+        {
+            var quizz = await context.Quizzes
+                .Select(quizz => quizz)
+                .Where(quizz => quizz.Id == quizzId)
+                .FirstAsync();
+
+            return quizz.ValidationCode;
         }
     }
 

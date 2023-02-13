@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace QuizzAppFilRouge.Models.User
+namespace QuizzAppFilRouge.Models.UserViewModels
 {
     public class UserViewModel
     {

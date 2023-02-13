@@ -1,4 +1,4 @@
-﻿@model QuizzAppFilRouge.Data.Entities.Response
+﻿@model QuizzAppFilRouge.Data.Entities.Question
 
 @{
     ViewData["Title"] = "Delete";
@@ -8,7 +8,7 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Response</h4>
+    <h4>Question</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -18,22 +18,16 @@
             @Html.DisplayFor(model => model.Content)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Question)
+            @Html.DisplayNameFor(model => model.QuestionLevel)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Question.Id)
+            @Html.DisplayFor(model => model.QuestionLevel)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ApplicationUser)
+            @Html.DisplayNameFor(model => model.QuestionType)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ApplicationUser.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Quizz)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Quizz.Id)
+            @Html.DisplayFor(model => model.QuestionType)
         </dd>
     </dl>
     

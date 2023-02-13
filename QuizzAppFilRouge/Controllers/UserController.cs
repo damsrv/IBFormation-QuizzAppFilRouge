@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using QuizzAppFilRouge.Data;
 using QuizzAppFilRouge.Data.Entities;
-using QuizzAppFilRouge.Models.User;
+using QuizzAppFilRouge.Models.UserViewModels;
 using System.Data;
 using System.Dynamic;
 

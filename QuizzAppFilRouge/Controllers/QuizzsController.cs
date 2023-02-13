@@ -13,7 +13,10 @@ using Microsoft.EntityFrameworkCore;
 using QuizzAppFilRouge.Data;
 using QuizzAppFilRouge.Data.Entities;
 using QuizzAppFilRouge.Domain;
-using QuizzAppFilRouge.Models.QuizzViewModel;
+using System.Threading.Tasks;
+using QuizzAppFilRouge.Models.QuizzViewModels;
+using QuizzAppFilRouge.Models.QuestionViewModels;
+using QuizzAppFilRouge.Models.AnswerViewModels;
 
 namespace QuizzAppFilRouge.Controllers
 {
@@ -23,36 +26,146 @@ namespace QuizzAppFilRouge.Controllers
         private readonly IQuizzRepository quizzsRepository;
         private readonly IUserRepository userRepository;
         private readonly IQuestionRepository questionRepository;
-        private readonly string actualLoggedUserId;
+        private UserManager<IdentityUser> userManager;
+        private readonly IAnswerRepository answerRepository;
 
 
         // Constructor
         public QuizzsController
         (
-
             IQuizzRepository quizzsRepository,
             IUserRepository userRepository,
-            IHttpContextAccessor httpContextAccessor,
-            IQuestionRepository questionRepository
+            IQuestionRepository questionRepository,
+            UserManager<IdentityUser> userManager,
+            IAnswerRepository answerRepository
         )
         {
             this.quizzsRepository = quizzsRepository;
             this.userRepository = userRepository;
-            // Permet de récupérer l'id du user actuellement connecté
-            var loggedUserId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            this.actualLoggedUserId = loggedUserId;
+            this.userManager = userManager;
             this.questionRepository = questionRepository;
+            this.answerRepository = answerRepository;
         }
 
         //OK
         public IActionResult Index()
         {
 
+
+
             return View();
 
         }
 
 
+        //////////////////////////////////////////////////////////////////////////////////////
+        //// PASSQUIZZ FUNCTIONS 
+        //////////////////////////////////////////////////////////////////////////////////////
+        
+
+        // TODO : Refactoriser les créations de quizzviewmodel et de quizz en fonctions
+
+        /**
+         * Lorsque le candidat arrive sur l'URL unique (contenant son id et l'id du quizz)
+         * ces deux fonction check si le validationCode recu par email est bien celui correspondant 
+         * au quizzId
+         * 
+         */
+        public async Task<IActionResult> CheckValidationCode(string applicantId, int quizzId)
+        {
+            var quizzViewModel = new QuizzViewModel
+            {
+                selectedCandidateId = applicantId,
+                Id = quizzId,
+                ValidationCode = await quizzsRepository.GetValidationCode(quizzId),
+            };
+
+            //var quizz = new Quizz
+            //{
+            //    Id = quizzId,
+            //    ValidationCode = await quizzsRepository.GetValidationCode(quizzId)
+            //};
+
+            return View(quizzViewModel);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CheckValidationCode(QuizzViewModel quizzViewModel )
+        {
+
+            var isValidationCodeCorrect = await quizzsRepository.CheckValidationCode(quizzViewModel);
+
+            if (isValidationCodeCorrect)
+            {
+
+                return RedirectToAction("PassQuizz", 
+                    new { quizzId = quizzViewModel.Id, questionNumber = 1 });
+
+            }
+
+            TempData["AlertMessage"] = "Votre code de validation n'est pas bon";
+
+            return View(quizzViewModel);
+
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //// PASSQUIZZ GET AND POST FUNCTIONS 
+        //////////////////////////////////////////////////////////////////////////////////////
+        public async Task<IActionResult> PassQuizz(int quizzId, int questionNumber)
+        {
+            // Récupère toutes les infos du Quizz
+            var passingQuizz = await quizzsRepository.GetQuizzById(quizzId);
+
+            // Calcule le nombre de questions dans le Quizz
+            var totalQuestionsQuizz = passingQuizz.Questions.Count;
+
+            // Récupère la question qu'on veut afficher
+            var actualQuestion = passingQuizz.Questions.ElementAt(questionNumber);
+
+
+            var questionViewModel = new QuestionViewModel
+            {
+                ActualQuestion = actualQuestion,
+                ActualQuestionNumber = questionNumber,
+            };
+
+            var quizzViewModel = new QuizzViewModel
+            {
+                Id = quizzId,
+                TotalQuestionsQuizz = totalQuestionsQuizz,
+            };
+
+            List<AnswerViewModel> answerList = new List<AnswerViewModel>();
+
+            foreach (var answer in actualQuestion.Answers)
+            {
+                var answerViewModel = new AnswerViewModel
+                {
+                    Id = answer.Id,
+                    Content= answer.Content,
+                };
+                answerList.Add(answerViewModel);
+
+            }
+
+            PassingQuizzViewModel passingQuizzViewModel = new PassingQuizzViewModel();
+
+            passingQuizzViewModel.QuizzViewModel = quizzViewModel;
+            passingQuizzViewModel.QuestionViewModel = questionViewModel;
+            passingQuizzViewModel.AnswerViewModel = answerList;
+
+            return View(passingQuizzViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PassQuizz(QuizzViewModel quizzViewModel)
+        {
+
+
+            return View();
+        }
 
         //////////////////////////////////////////////////////////////////////////////////////
         //// GETALLQUIZZS AND GETALLQUIZZSBYID (A FAIRE) FUNCTIONS 
@@ -62,6 +175,7 @@ namespace QuizzAppFilRouge.Controllers
         // GET: Quizzs
         public async Task<IActionResult> GetAllQuizzs()
         {
+            
 
             var quizzes = await quizzsRepository.GetAll();
 
@@ -77,7 +191,8 @@ namespace QuizzAppFilRouge.Controllers
                     ValidationCode = quizz.ValidationCode,
                     QuizzLevel = quizz.QuizzLevel,
                     QuizzCreator = quizz.QuizzCreator,
-
+                    QuizzLangage= quizz.QuizzLangage,
+                    Passages= quizz.Passages,
                 });
 
             }
@@ -109,6 +224,8 @@ namespace QuizzAppFilRouge.Controllers
                 ValidationCode = quizz.ValidationCode,
                 QuizzLevel = quizz.QuizzLevel,
                 QuizzCreator = quizz.QuizzCreator,
+                QuizzLangage = quizz.QuizzLangage,
+
             };
 
             return View(quizzViewModel);
@@ -249,14 +366,13 @@ namespace QuizzAppFilRouge.Controllers
         public async Task<IActionResult> Create()
         {
 
-
             // Récupérer les users que la personne connectée gère
-            var userList = await userRepository.GetUserHandledById(actualLoggedUserId);
+            var userList = await userRepository.GetUserHandledById(getLoggedUserId());
 
             var quizzViewModel = new QuizzViewModel();
-            quizzViewModel.HandledByMeCandidates = new List<SelectListItem>();
 
             // Créer la select list HandledByMeCandidates qui va être envoyée à la vue
+            quizzViewModel.HandledByMeCandidates = new List<SelectListItem>();
             foreach (var user in userList)
             {
                 quizzViewModel.HandledByMeCandidates
@@ -267,18 +383,17 @@ namespace QuizzAppFilRouge.Controllers
                     });
             }
 
-
-
             return View(quizzViewModel);
         }
 
 
+        // AJOUTER LA GESTIONS DES LANGAGES DANS LE QUIZZ
         // POST: Quizzs/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(QuizzViewModel quizzViewModel)
         {
-            // Récuprère toute les questions
+            // Récupère toute les questions
             var questionLists = await questionRepository.GetAllQuestions();
 
             // Créer une liste de questions de maniere aléatoire 
@@ -286,26 +401,23 @@ namespace QuizzAppFilRouge.Controllers
             (
                 questionLists,
                 (int)quizzViewModel.QuizzLevel,
+                (int)quizzViewModel.QuizzLangage,
                 quizzViewModel.TotalQuestionNumber,
                 quizzViewModel.FreeQuestionPercentage
             );
 
-
+            // Put the user logged id inside a new ApplicationUser object
             ApplicationUser userLogged = new ApplicationUser();
-            userLogged.Id = actualLoggedUserId;
+            userLogged.Id = getLoggedUserId();
 
-            // ETAPES
-            // Actuellement on à une liste de questions avec les réponses correspondantes
-            // Il faut peupler les autres tables liées à questions
-
+            // Créer les ligne des réponses (vide) qui vont aller dans la table réponse
             var responses = new List<Response>();
-
             foreach (var question in randowQuestionsFinalList)
             {
                 responses.Add(new Response
                 {
                     Content = null,
-                    IdentityUserId = quizzViewModel.selectedCandidateId,
+                    ApplicationUserId = quizzViewModel.selectedCandidateId,
                     QuestionId = question.Id,
                 });
             }
@@ -313,6 +425,7 @@ namespace QuizzAppFilRouge.Controllers
 
             // OK MARCHE NICKEL !!!!!
             // PEUPLE BIEN TOUTE LES TABLES COMME IL FAUT !
+            // Gestion du langage bien implémentée
             // LE DELETE DU QUIZZ SUPPRIME BIEN TOUT EN CASCADE
             Quizz newQuizz = new Quizz
             {
@@ -322,11 +435,12 @@ namespace QuizzAppFilRouge.Controllers
                 QuizzCreator = userLogged,
                 Passages = new Passage
                 {
-                    IdentityUserId = quizzViewModel.selectedCandidateId,
+                    ApplicationUserId = quizzViewModel.selectedCandidateId,
                     PassageDate = quizzViewModel.PassageDate,
                 },
                 Questions = randowQuestionsFinalList,
                 Responses = responses,
+                QuizzLangage = quizzViewModel.QuizzLangage,
             };
 
             //1 aller peupler quizz
@@ -379,6 +493,7 @@ namespace QuizzAppFilRouge.Controllers
         (
             List<Question> questionList,
             int quizzLevel,
+            int quizzLangage,
             double totalQuestionNumber,
             int freeQuestionPercentages
         )
@@ -386,11 +501,11 @@ namespace QuizzAppFilRouge.Controllers
             // Transforme pourcentage free question en nombre (fct du nombre de question)
             double freeQuestionNumber = (totalQuestionNumber / 100) * freeQuestionPercentages;
 
-            var randomFreeQuestionList = selectRandomFreeQuestion(quizzLevel, questionList, freeQuestionNumber, totalQuestionNumber);
+            // 
+            var randomFreeQuestionList = selectRandomFreeQuestion(quizzLevel, quizzLangage, questionList, freeQuestionNumber, totalQuestionNumber);
 
  
-            // OK JUSQUE ICI
-            var randomQCMQuestionList = selectRandomQCMQuestion(quizzLevel, questionList, freeQuestionNumber, totalQuestionNumber);
+            var randomQCMQuestionList = selectRandomQCMQuestion(quizzLevel, quizzLangage, questionList, freeQuestionNumber, totalQuestionNumber);
 
             var randowQuestionsFinalList = randomFreeQuestionList
                 .Concat(randomQCMQuestionList)
@@ -415,17 +530,22 @@ namespace QuizzAppFilRouge.Controllers
         public List<Question> selectRandomFreeQuestion 
         (
             int quizzLevel,
+            int quizzLangage,
             List<Question> questionList,
             double freeQuestionNumber,
             double totalQuestionNumber
         )
         {
-            // Select en base les free questions ayant le niveau du quizz 
+            // Select dans la listes les free questions ayant le niveau du quizz 
             var freeQuestionListByQuizzLevel = selectFreeQuestionByQuizzLevel(questionList, quizzLevel);
+            
+            // Ecreme la liste en choisissant le langage demandé
+            var freeQuestionListByQuizzLevelAndLangage = selectFreeQuestionByQuizzLangage(quizzLangage, freeQuestionListByQuizzLevel);
+
 
             // Dans toutes les questions selectionnée en base on choisit randomly
             // Des questions libre en fonction du nombre souhaité
-            var freeQuestionRandomList = selectFreeQuestionRandomly(freeQuestionNumber, freeQuestionListByQuizzLevel);
+            var freeQuestionRandomList = selectFreeQuestionRandomly(freeQuestionNumber, freeQuestionListByQuizzLevelAndLangage);
 
             //selectQCMQuestionRandomly ()
             return freeQuestionRandomList;
@@ -443,6 +563,17 @@ namespace QuizzAppFilRouge.Controllers
 
 
             return freeQuestionListByLevel;
+        }
+        public List<Question> selectFreeQuestionByQuizzLangage(int quizzLangage, List<Question> questionList)
+        {
+            // Selectionne dans la liste des free questions le nombre de free questions qui ont le niveau du quizz
+            var freeQuestionListByLangage = questionList
+                .Select(question => question)
+                .Where(question => (int)question.QuestionLangage == quizzLangage)
+                .ToList();
+
+
+            return freeQuestionListByLangage;
         }
 
         public List<Question> selectFreeQuestionRandomly(double freeQuestionNumber, List<Question> freeQuestionListByQuizzLevel )
@@ -462,13 +593,9 @@ namespace QuizzAppFilRouge.Controllers
         }
 
 
-        ////////////////////////////////////////////////////////////////////////////////////////
-        ////// SELECT QCM  QUESTIONS FUNCTIONS 
-        ///////////////////////////////////////////////////////////////////////////////////////
-
-        // obj :
-        // avoir une liste avec un nombre de questions qcm en fonction 
-        // du niveau du quizz - le nombre de question libre
+////////////////////////////////////////////////////////////////////////////////////////
+////// SELECT QCM  QUESTIONS FUNCTIONS 
+///////////////////////////////////////////////////////////////////////////////////////
 
         /**
         * 
@@ -477,12 +604,12 @@ namespace QuizzAppFilRouge.Controllers
         public List<Question> selectRandomQCMQuestion
         (
             int quizzLevel,
+            int quizzLangage,
             List<Question> questionList,
             double freeQuestionNumber,
             double totalQuestionNumber
         )
         {
-        // https://localhost:7256/Quizzs/Create
 
             // calcul le nombre de question par niveau en fonction du niveau du quizz
             // Renvoi dictionnaire Dic<niveau, nombre de questions>
@@ -493,15 +620,17 @@ namespace QuizzAppFilRouge.Controllers
             // dans la tranche du dictionnaire qui correspond au niveau du quizz
             numberOfQuestionsByLevel[quizzLevel] = numberOfQuestionsByLevel[quizzLevel] - freeQuestionNumber;
             
-            // OK jusqu'ici
             
             // Select dans full list de question les QCM questions 
             var qcmQuestionOnlyList = selectQCMQuestionOnly(questionList);
 
-            // Dans toutes les questions selectionnée en base on choisit randomly
-            // Des questions libre en fonction du nombre souhaité
+            // Select liste question QCM les question avec le bon type de langage
+            var qcmQuestionOnlyListByLangage = selectQCMQuestionByLangage(quizzLangage, qcmQuestionOnlyList);
+
+            // Dans toutes les questions selectionnée on choisit randomly
+            // des questions QCM en fonction du nombre souhaité par niveau
             // OK FONCTIONNE NICKEL
-            var qcmQuestionRandomList = selectQCMQuestionRandomly(qcmQuestionOnlyList, numberOfQuestionsByLevel);
+            var qcmQuestionRandomList = selectQCMQuestionRandomly(qcmQuestionOnlyListByLangage, numberOfQuestionsByLevel);
 
             //
             return qcmQuestionRandomList;
@@ -514,6 +643,18 @@ namespace QuizzAppFilRouge.Controllers
             var qcmQuestionList = questionList
                 .Select(question => question)
                 .Where(question => (int)question.QuestionType == (int)QuestionTypeEnum.QCM)
+                .ToList();
+
+
+            return qcmQuestionList;
+        }
+
+        public List<Question> selectQCMQuestionByLangage(int quizzLangage, List<Question> questionList)
+        {
+            // Selectionne dans la liste de question toute les questions qcm
+            var qcmQuestionList = questionList
+                .Select(question => question)
+                .Where(question => (int)question.QuestionLangage == quizzLangage)
                 .ToList();
 
 
@@ -550,8 +691,11 @@ namespace QuizzAppFilRouge.Controllers
             // Pour liste Junior
             for (int i = 0; i < numberOfQuestionsByLevel[(int)QuestionLevelEnum.Junior]; i++)
             {
+                // Choisi un random entre 0 et le nombre restant dans la liste Junior
                 int randomNumber = random.Next(qcmQuestionListJunior.Count);
+                // Ajoute cette Question dans la liste des questions QCM
                 randomQCMQuestionList.Add(qcmQuestionListJunior[randomNumber]);
+                // Supprimer cette question de la liste pour pas qu'elle ne soit choisie deux fois
                 qcmQuestionListJunior.RemoveAt(randomNumber);
             }
             // Pour liste Medium
@@ -630,6 +774,14 @@ namespace QuizzAppFilRouge.Controllers
 
         }
 
+
+        public string getLoggedUserId()
+        {
+            // Permet de récupérer l'id du user actuellement connecté
+            var loggedUserId = userManager.GetUserId(User); // Get user id:
+            return loggedUserId;
+
+        }
 
 
     }

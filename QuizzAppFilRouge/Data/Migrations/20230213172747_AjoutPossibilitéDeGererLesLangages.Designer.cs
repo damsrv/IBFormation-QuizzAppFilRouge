@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuizzAppFilRouge.Data;
 
@@ -11,9 +12,11 @@ using QuizzAppFilRouge.Data;
 namespace QuizzAppFilRouge.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230213172747_AjoutPossibilitéDeGererLesLangages")]
+    partial class AjoutPossibilitéDeGererLesLangages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,7 +247,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasIndex("QuizzesId");
 
-                    b.ToTable("QuestionQuizz", (string)null);
+                    b.ToTable("QuestionQuizz");
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.Answer", b =>
@@ -269,7 +272,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers", (string)null);
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.Passage", b =>
@@ -290,7 +293,7 @@ namespace QuizzAppFilRouge.Data.Migrations
                     b.HasIndex("QuizzId")
                         .IsUnique();
 
-                    b.ToTable("Passages", (string)null);
+                    b.ToTable("Passages");
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.Question", b =>
@@ -315,7 +318,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.Quizz", b =>
@@ -345,7 +348,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasIndex("QuizzCreatorId");
 
-                    b.ToTable("Quizzes", (string)null);
+                    b.ToTable("Quizzes");
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.Response", b =>
@@ -377,7 +380,7 @@ namespace QuizzAppFilRouge.Data.Migrations
 
                     b.HasIndex("QuizzId");
 
-                    b.ToTable("Responses", (string)null);
+                    b.ToTable("Responses");
                 });
 
             modelBuilder.Entity("QuizzAppFilRouge.Data.Entities.ApplicationUser", b =>

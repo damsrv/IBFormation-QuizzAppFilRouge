@@ -1,4 +1,4 @@
-﻿@using QuizzAppFilRouge.Models.QuizzViewModel
+﻿@using QuizzAppFilRouge.Models.QuizzViewModels
 
 
 @model QuizzViewModel
@@ -30,6 +30,12 @@
         </dt>
         <dd class = "col-sm-10">
             @Model.Id
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.QuizzLangage)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.QuizzLangage
         </dd>
     </dl>
 </div>

@@ -110,10 +110,15 @@ namespace QuizzAppFilRouge.Controllers
 
         }
 
-        //////////////////////////////////////////////////////////////////////////////////////
-        //// PASSQUIZZ GET AND POST FUNCTIONS 
-        //////////////////////////////////////////////////////////////////////////////////////
-        public async Task<IActionResult> PassQuizz(int quizzId, int questionNumber)
+
+//////////////////////////////////////////////////////////////////////////////////////
+//// PASSQUIZZ GET AND POST FUNCTIONS 
+//////////////////////////////////////////////////////////////////////////////////////
+        /**
+         * Méthode pour le passage des quizzs
+         * Recoit une URL avec un id de quizz et le numéro de la question en cours.
+         */
+        public async Task<IActionResult> PassQuizz(int quizzId, int actualQuestionNumber = 1)
         {
             // Récupère toutes les infos du Quizz
             var passingQuizz = await quizzsRepository.GetQuizzById(quizzId);
@@ -122,13 +127,13 @@ namespace QuizzAppFilRouge.Controllers
             var totalQuestionsQuizz = passingQuizz.Questions.Count;
 
             // Récupère la question qu'on veut afficher
-            var actualQuestion = passingQuizz.Questions.ElementAt(questionNumber);
+            var actualQuestion = passingQuizz.Questions.ElementAt(actualQuestionNumber);
 
 
             var questionViewModel = new QuestionViewModel
             {
                 ActualQuestion = actualQuestion,
-                ActualQuestionNumber = questionNumber,
+                ActualQuestionNumber = actualQuestionNumber,
             };
 
             var quizzViewModel = new QuizzViewModel
@@ -167,9 +172,9 @@ namespace QuizzAppFilRouge.Controllers
             return View();
         }
 
-        //////////////////////////////////////////////////////////////////////////////////////
-        //// GETALLQUIZZS AND GETALLQUIZZSBYID (A FAIRE) FUNCTIONS 
-        //////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//// GETALLQUIZZS AND GETALLQUIZZSBYID (A FAIRE) FUNCTIONS 
+//////////////////////////////////////////////////////////////////////////////////////
 
         //OK
         // GET: Quizzs
@@ -387,7 +392,6 @@ namespace QuizzAppFilRouge.Controllers
         }
 
 
-        // AJOUTER LA GESTIONS DES LANGAGES DANS LE QUIZZ
         // POST: Quizzs/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -446,27 +450,13 @@ namespace QuizzAppFilRouge.Controllers
             //1 aller peupler quizz
             await quizzsRepository.Create(newQuizz);
 
-            // 
 
-
-
-
-            // TODO : Function qui Créer des questions 
-            // 1) créer object quizz
-
-            //var quizz = new Quizz
-            //{
-            //    QuizzCreator = HandledCandidates;
-
-            //};
 
             //if (ModelState.IsValid)
             //{
-            //    _context.Add(quizz);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
+
             //}
-            //return View(quizz);
+
             return RedirectToAction(nameof(Index));
         }
 

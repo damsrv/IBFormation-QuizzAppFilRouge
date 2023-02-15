@@ -18,6 +18,7 @@ namespace QuizzAppFilRouge.Controllers
         
         public IActionResult Index()
         {
+            //ViewData["PageName"] = "accueil";
             return View(); 
         }
 

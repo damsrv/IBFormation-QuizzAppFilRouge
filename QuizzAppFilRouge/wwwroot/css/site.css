@@ -34,12 +34,14 @@ html {
 }
 
 .accueil {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    border-radius: 30px;
     background-image:  url(https://img.freepik.com/vecteurs-libre/papier-peint-geometrique-degrade_23-2148818330.jpg?w=1060&t=st=1676465147~exp=1676465747~hmac=b751c045ee1dd00f5fef93ecc605d0fb1cfaf5e6a51d6b0c70948e296cc0df74);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;    
+        
 }
+
+
 
 
 .denied {
@@ -58,6 +60,8 @@ html {
 .bg-login {
     background-image: url(https://img.freepik.com/vecteurs-libre/fond-abstrait-geometrique-plat_23-2149447623.jpg?w=1060&t=st=1676389903~exp=1676390503~hmac=ea33f7bb80c330bc0075222ea03b2b0cfe68441df3e12bdf2dfa261753544594);
     background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 

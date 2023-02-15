@@ -52,6 +52,11 @@ html {
   justify-content: center;
 }
 
+.card{
+    border-radius: 20px;
+}
+
+
 .bg-login {
   background-image: url(https://img.freepik.com/vecteurs-libre/fond-abstrait-geometrique-plat_23-2149447623.jpg?w=1060&t=st=1676389903~exp=1676390503~hmac=ea33f7bb80c330bc0075222ea03b2b0cfe68441df3e12bdf2dfa261753544594);
   background-repeat: no-repeat;

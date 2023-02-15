@@ -30,19 +30,49 @@
     <header>
     </header>
     <div class="d-flex gap-4 ">
+       @if (!User.Identity.IsAuthenticated)
+{
         <div class="col-2 d-flex flex-column p-3 shadow bg-light vh-100  @GetBodyClass()">
-            <ul class="list-unstyled">
-
-
+            <ul class="list-unstyled d-flex flex-column gap-3">
+                <li class="d-flex align-items-center w-100">
+                    <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3" href="https://localhost:7256/">
+                    <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/2163/2163350.png" />Accueil</a>
+                </li>
                 <li>
-
-                    <a class="d-flex text-center p-3" href="https://localhost:7256/"><img height="32" width="32" src="/assets/images/home.png" /></a>
-                    <a class="d-flex text-center p-3 " href="https://localhost:7256/">Accueil</a>
+                <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3" href="https://localhost:7256/">
+                <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/5726/5726470.png" /> Quizz</a>
+                </li>
+                <li>
+                <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3" href="https://localhost:7256/">
+                <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/5726/5726470.png" /> 
+                Question</a>
+                </li>
+                <li>
+                <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3 " href="https://localhost:7256/">
+                <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/5726/5726470.png" /> 
+                Agence</a>
+                </li>
+                                <li>
+                <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3 " href="https://localhost:7256/">
+                <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/5726/5726470.png" /> 
+                Utilisateurs</a>
+                </li>
+                                <li>
+                <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3 " href="https://localhost:7256/">
+                <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/5726/5726470.png" /> 
+                Lorem</a>
+                </li>
+                                <li>
+                <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3 " href="https://localhost:7256/">
+                <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/5726/5726470.png" /> 
+                Lorem</a>
                 </li>
 
             </ul>
 
         </div>
+
+}
 
 
 

@@ -22,9 +22,11 @@ namespace QuizzAppFilRouge.Data.Entities
 
         public Quizz Quizz { get; set; }
 
-
+        public bool IsCorrect { get; set; }
         
 
 
     }
 }
+
+

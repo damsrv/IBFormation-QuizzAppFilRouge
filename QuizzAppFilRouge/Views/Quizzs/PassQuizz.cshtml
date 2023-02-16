@@ -10,7 +10,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="PassQuizz">
+        <form method="post" asp-action="PassQuizz">
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -18,18 +18,27 @@
                 @Model.QuestionViewModel.ActualQuestion.Content
             </div>
 
-            @foreach (var answer in @Model.AnswerViewModel)
+
+            @for (var index = 0; index < @Model.AnswerViewModel.Count; index++)
             {
-                <label asp-for="@answer" class="control-label"> @answer.Content</label>
-                <input type="checkbox" name="@answer" />
-                <span asp-validation-for="@answer" class="text-danger"></span>
+                    <input type="checkbox" asp-for="@Model.AnswerViewModel[index].IsChecked" class="form-check-input" />
+                    <label class="form-check-label" asp-for="@Model.AnswerViewModel[index].IsChecked">
+                        @Model.AnswerViewModel[index].Content 
+                    </label>
+                        <input type="hidden" asp-for="@Model.AnswerViewModel[index].Id" />
+                        <input type="hidden" asp-for="@Model.AnswerViewModel[index].Content" />
+                    <br />
             }
-@*            <div class="form-group">
-                <label asp-for="" class="control-label"> Validation Code : </label>
-                <input type="checkbox" name="" />
-                <span asp-validation-for="" class="text-danger"></span>
-            </div>
-*@
+
+
+            <input asp-for="QuizzViewModel.TotalQuestionsQuizz" type="hidden"/>
+            <input asp-for="QuizzViewModel.Id" type="hidden"/>
+
+            <input asp-for="QuestionViewModel.Id" type="hidden"/>
+            <input asp-for="QuestionViewModel.ActualQuestion.Id" type="hidden"/>
+            <input asp-for="QuestionViewModel.ActualQuestionNumber" type="hidden"/>
+
+            <input asp-for="@Model.Passage.ApplicationUserId" type="hidden"/>
 
 
 
@@ -50,5 +59,13 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+
     }
+    <script>
+    $('input[type="checkbox"]').on('change', function() {
+       $(this).siblings('input[type="checkbox"]').prop('checked', false);
+    });
+    </script>
+
 }

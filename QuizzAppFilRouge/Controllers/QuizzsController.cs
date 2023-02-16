@@ -24,16 +24,19 @@ namespace QuizzAppFilRouge.Controllers
     public class QuizzsController : Controller
     {
         private readonly IQuizzRepository quizzsRepository;
+        private readonly IResponseRepository responseRepository;
         private readonly IUserRepository userRepository;
         private readonly IQuestionRepository questionRepository;
         private UserManager<IdentityUser> userManager;
         private readonly IAnswerRepository answerRepository;
+        PassingQuizzViewModel passingQuizzViewModel = new PassingQuizzViewModel();
 
 
         // Constructor
         public QuizzsController
         (
             IQuizzRepository quizzsRepository,
+            IResponseRepository responseRepository,
             IUserRepository userRepository,
             IQuestionRepository questionRepository,
             UserManager<IdentityUser> userManager,
@@ -41,6 +44,7 @@ namespace QuizzAppFilRouge.Controllers
         )
         {
             this.quizzsRepository = quizzsRepository;
+            this.responseRepository = responseRepository;
             this.userRepository = userRepository;
             this.userManager = userManager;
             this.questionRepository = questionRepository;
@@ -121,19 +125,24 @@ namespace QuizzAppFilRouge.Controllers
         public async Task<IActionResult> PassQuizz(int quizzId, int actualQuestionNumber = 1)
         {
             // Récupère toutes les infos du Quizz
-            var passingQuizz = await quizzsRepository.GetQuizzById(quizzId);
+       
+                var passingQuizz = await quizzsRepository.GetQuizzById(quizzId);
+
+            
+
 
             // Calcule le nombre de questions dans le Quizz
             var totalQuestionsQuizz = passingQuizz.Questions.Count;
 
             // Récupère la question qu'on veut afficher
-            var actualQuestion = passingQuizz.Questions.ElementAt(actualQuestionNumber);
+            var actualQuestion = passingQuizz.Questions.ElementAt(actualQuestionNumber-1);
 
 
             var questionViewModel = new QuestionViewModel
             {
                 ActualQuestion = actualQuestion,
                 ActualQuestionNumber = actualQuestionNumber,
+                Id = quizzId,
             };
 
             var quizzViewModel = new QuizzViewModel
@@ -155,19 +164,54 @@ namespace QuizzAppFilRouge.Controllers
 
             }
 
-            PassingQuizzViewModel passingQuizzViewModel = new PassingQuizzViewModel();
-
             passingQuizzViewModel.QuizzViewModel = quizzViewModel;
             passingQuizzViewModel.QuestionViewModel = questionViewModel;
             passingQuizzViewModel.AnswerViewModel = answerList;
+            passingQuizzViewModel.Passage = passingQuizz.Passages;
+
+            //Plus necessaire car checkbox fonctionne.
+            //keepPassingQuizzViewModelInfo(passingQuizzViewModel);
 
             return View(passingQuizzViewModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PassQuizz(QuizzViewModel quizzViewModel)
-        {
+        //Plus necessaire car checkbox fonctionne.
+        //private void keepPassingQuizzViewModelInfo(PassingQuizzViewModel passingQuizzViewModel)
+        //{
+        //    this.passingQuizzViewModel = passingQuizzViewModel;
+        //}
+        //private PassingQuizzViewModel getPassingQuizzViewModelInfo()
+        //{
+        //    return passingQuizzViewModel;
+        //}
 
+        [HttpPost]
+        public async Task<IActionResult> PassQuizz(PassingQuizzViewModel passingQuizzViewModel)
+        {
+            var choosenAnswer = passingQuizzViewModel.AnswerViewModel
+                .Select(answer => answer)
+                .Where(answer => answer.IsChecked == true)
+                .First();
+
+            // Faire la comparaison avec la bonne réponse de suite afin d'enregistrer en base dans 
+            // la colonne IsCorrect si c'est la bonne réponse ou pas que l'user à choisit
+
+            // A FAIRE CREER DIRECT OBJET REPONSE ET LE PASSER A LA METHODE ADDRESPONSE;
+            //var userResponse = new Response
+            //{
+            //    Content = 
+            //}
+
+
+            responseRepository.AddResponse
+            (
+                new Answer { Id = choosenAnswer.Id },
+                passingQuizzViewModel.QuizzViewModel.Id,
+                passingQuizzViewModel.QuestionViewModel.Id,
+                passingQuizzViewModel.Passage.ApplicationUserId
+            );
+
+            //var quizzViewModel = getPassingQuizzViewModelInfo();
 
             return View();
         }

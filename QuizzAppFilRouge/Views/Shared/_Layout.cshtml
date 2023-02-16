@@ -25,12 +25,13 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QuizzAppFilRouge.styles.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.css" rel="stylesheet" />
 </head>
 <body class="@ViewBag.BodyClass">
     <header>
     </header>
     <div class="d-flex gap-4 ">
-       @if (!User.Identity.IsAuthenticated)
+       @if (User.Identity.IsAuthenticated)
 {
         <div class="col-2 d-flex flex-column p-3 shadow bg-light vh-100  @GetBodyClass()">
             <ul class="list-unstyled d-flex flex-column gap-3">
@@ -93,6 +94,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js%22%3E</script>*@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

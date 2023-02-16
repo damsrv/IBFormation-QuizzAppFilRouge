@@ -67,3 +67,43 @@ html {
 .border-20-px {
   border-radius: 20px;
 }
+
+.bg-gradient-pink {
+    background: #ec008c; /* fallback for old browsers */
+    background: -webkit-linear-gradient( to right, #fc6767, #ec008c ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient( to right, #fc6767, #ec008c ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.bg-gradient-purple {
+    background: #7f00ff; /* fallback for old browsers */
+    background: -webkit-linear-gradient( to left, #e100ff, #7f00ff ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient( to left, #e100ff, #7f00ff ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.bg-gradient-green {
+    background: #11998e; /* fallback for old browsers */
+    background: -webkit-linear-gradient( to left, #38ef7d, #11998e ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient( to left, #38ef7d, #11998e ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.bg-gradient-yellow {
+    background: #ffe000; /* fallback for old browsers */
+    background: -webkit-linear-gradient( to left, #799f0c, #ffe000 ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient( to left, #799f0c, #ffe000 ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.Quizz-page {
+    background-image: url(https://img.freepik.com/psd-gratuit/formes-abstraites-fond-blanc_1297-153.jpg?w=740&t=st=1676508166~exp=1676508766~hmac=18ab6acb7362548c60eeacbe04de83d7d73e04216c101668d74240b054a68731);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/*input:focus {
+    outline: none !important;
+    border-color: black;
+    box-shadow: 0 0 10px #719ECE;
+}*/
+input {
+    outline-color: black;
+}

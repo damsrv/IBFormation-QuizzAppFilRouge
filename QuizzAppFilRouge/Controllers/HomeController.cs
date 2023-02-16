@@ -2,6 +2,15 @@
 using QuizzAppFilRouge.Models;
 using System.Diagnostics;
 using System.Security.Claims;
+//using ChartJs.Blazor.ChartJS.BarChart;
+//using ChartJs.Blazor.ChartJS.Common.Axes;
+//using ChartJs.Blazor.ChartJS.Common.Axes.Ticks;
+//using ChartJs.Blazor.ChartJS.Common.Properties;
+//using ChartJs.Blazor.ChartJS.LineChart;
+//using ChartJs.Blazor.ChartJS.LineChart.Axes;
+//using ChartJs.Blazor.ChartJS.LineChart.Axes.Ticks;
+//using ChartJs.Blazor.ChartJS.LineChart.Dataset;
+//using ChartJs.Blazor.ChartJS.LineChart.Options;
 
 namespace QuizzAppFilRouge.Controllers
 {
@@ -27,6 +36,20 @@ namespace QuizzAppFilRouge.Controllers
         //    return View();
         //}
 
+        //public IActionResult MyChart()
+        //{
+        //    // Récupérez les données pour votre graphique ici
+        //    var data = new int[] { 10, 20, 30, 40, 50 };
+
+        //    // Créez l'objet Chart.js et configurez-le
+        //    var chart = new Chart(new BarChart("myChart", new BarDataset(data)
+        //    {
+        //        Label = "Données de test"
+        //    }));
+
+        //    // Renvoyez la vue avec le graphique
+        //    return View(chart);
+        //}
 
 
 

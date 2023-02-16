@@ -4,28 +4,32 @@
 
 @{
     ViewData["Title"] = "Créer un Quizz";
+    ViewBag.BodyClass = "Quizz-page";
 }
 
 
-<h4>Généaration de Nouveau Quizz</h4>
+
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="card rounded-3 shadow-lg p-4 m-4 align-items-center">
+        <div class="d-flex">
+        <img width="200" height="200"  src="~/assets/images/QuizzDesign.png" alt="Image de Quizz" class="rounded-circle"/>
+        </div>
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="TotalQuestionNumber" class="control-label"></label>
-                    <select asp-for="TotalQuestionNumber" class="form-select" >
+                <label asp-for="NombreDeQuestions" class="control-label d-flex justify-content-center align-items-center ">Nombre de Questions</label>
+                <select asp-for="NombreDeQuestions" class="form-select w-100 d-flex align-items-center shadow-lg gap-2 p-1 border-20-px  rounded-lg d-flex text-center border-black">
                         <option value="10">10</option>
                         <option value="20">20</option>
                     </select>
-                <span asp-validation-for="TotalQuestionNumber" class="text-danger"></span>
+                <span asp-validation-for="NombreDeQuestions" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="FreeQuestionPercentage" class="control-label"></label>
-                    <select asp-for="FreeQuestionPercentage" class="form-select" >
+                <label asp-for="FreeQuestionPercentage" class="control-label d-flex justify-content-center align-items-center">Pourcentage</label>
+                <select asp-for="FreeQuestionPercentage" class="form-select w-100 d-flex align-items-center shadow-lg gap-2 p-1 border-20-px  rounded-lg d-flex text-center border-black">
                         <option value="10">10 %</option>
                         <option value="20">20 %</option>
                     </select>
@@ -33,8 +37,8 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="QuizzLevel" class="control-label">Niveau du Questionnaire</label>
-                    <select asp-for="QuizzLevel" class="form-select" >
+                <label asp-for="QuizzLevel" class="control-label d-flex justify-content-center align-items-center">Niveau du Questionnaire</label>
+                <select asp-for="QuizzLevel" class="form-select w-100 d-flex align-items-center justify-content-center shadow-lg gap-2 p-1 border-20-px  rounded-lg d-flex text-center border-black">
                     @foreach (QuizzLevelEnum level in QuizzLevelEnum.GetValues(typeof(QuizzLevelEnum)))
                     {
                             <option value="@level">@level</option>
@@ -44,8 +48,8 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="QuizzLangage" class="control-label">Langage du Questionnaire</label>
-                    <select asp-for="QuizzLangage" class="form-select" >
+                <label asp-for="QuizzLangage" class="control-label d-flex justify-content-center align-items-center">Langage du Questionnaire</label>
+                <select asp-for="QuizzLangage" class="form-select w-100 d-flex align-items-center shadow-lg gap-2 p-1 border-20-px  rounded-lg d-flex text-center border-black">
                     @foreach (QuizzLangageEnum level in QuizzLangageEnum.GetValues(typeof(QuizzLangageEnum)))
                     {
                                     <option value="@level">@level</option>
@@ -56,21 +60,21 @@
 
 
             <div class="form-group">
-                <label asp-for="selectedCandidateId" class="control-label"> Associer à un candidat </label>
-                <select asp-items="Model.HandledByMeCandidates" asp-for="selectedCandidateId" class="form-select" >
+                <label asp-for="selectedCandidateId" class="control-label d-flex justify-content-center align-items-center"> Associer à un candidat </label>
+                <select asp-items="Model.HandledByMeCandidates" asp-for="selectedCandidateId" class="form-select w-100 d-flex align-items-center shadow-lg gap-2 p-1 border-20-px  rounded-lg d-flex text-center border-black">
                 </select>
             </div>
 
             <div class="form-group"> 
-                <label asp-for="PassageDate"> Date de passage programmée </label>
-                <input asp-for="PassageDate" class="form-control" />
+                <label asp-for="PassageDate" class="d-flex justify-content-center align-items-center"> Date de passage programmée </label>
+                <input asp-for="PassageDate" class="form-control w-100 d-flex align-items-center shadow-lg gap-2 p-1 border-20-px  rounded-lg d-flex text-center border-black" />
                 <span asp-validation-for="PassageDate" class="text-danger"></span>
             </div>
 
 
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Valider" class="btn btn-primary w-100 d-flex mt-3 justify-content-center align-items-center shadow-lg  d-flex p-2 "/>
             </div>
         </form>
     </div>

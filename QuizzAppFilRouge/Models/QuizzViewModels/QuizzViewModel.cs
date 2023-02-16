@@ -23,7 +23,7 @@ namespace QuizzAppFilRouge.Models.QuizzViewModels
         [ForeignKey("ApplicationUser")]
         public virtual ApplicationUser? QuizzCreator { get; set; }
 
-        public int NombreDeQuestions { get; set; }
+        public int TotalQuestionNumber { get; set; }
 
         public int FreeQuestionPercentage { get; set; }
 

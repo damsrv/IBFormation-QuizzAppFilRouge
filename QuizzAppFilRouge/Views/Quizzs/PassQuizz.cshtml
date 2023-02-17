@@ -7,14 +7,19 @@
 
 <h1>Question n°@(Model.QuestionViewModel.ActualQuestionNumber + 1)/ @Model.QuizzViewModel.TotalQuestionsQuizz</h1>
 
-
+@{
+    ViewBag.BodyClass = "background-quizz";
+}
+<div class="col-6">
 <div class="row">
-    <div class="col-md-4">
+    <div class="card shadow-lg p-4 m-2 align-items-center">
+      <img width="128" height="128"  src="~/assets/images/DesignQuizz.png"/>
+
         <form method="post" asp-action="PassQuizz">
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div> 
+            <div class="my-4"> 
                 @Model.QuestionViewModel.ActualQuestion.Content
             </div>
 
@@ -23,7 +28,7 @@
 
                 @for (var index = 0; index < @Model.AnswerViewModel.Count; index++)
                 {
-                            <input type="checkbox" asp-for="@Model.AnswerViewModel[index].IsChecked" class="form-check-input" />
+                            <input type="checkbox" asp-for="@Model.AnswerViewModel[index].IsChecked" class="form-check-input"/>
                             <label class="form-check-label" asp-for="@Model.AnswerViewModel[index].IsChecked">
                         @Model.AnswerViewModel[index].Content 
                             </label>
@@ -39,7 +44,7 @@
 
                 <div class="form-group">
                     <label asp-for="@Model.Comment" class="control-label"> Ajouter un commentaire si besoin :</label>
-                    <textarea asp-for="@Model.Comment" > </textarea>
+                    <textarea placeholder="Veuillez entrer votre réponse ici" asp-for="@Model.Comment"> </textarea>
                     <span asp-validation-for="@Model.Comment" class="text-danger"></span>
                 </div>
 
@@ -60,14 +65,13 @@
             }
             else if (Model.QuestionViewModel.QuestionType == QuestionTypeEnum.FreeQuestion)
             {
-                        <label asp-for="@Model.AnswerViewModel[0].FreeQuestionAnswer" class="control-label"> Veuillez entrer votre réponse ici </label>
-                    <textarea asp-for="@Model.AnswerViewModel[0].FreeQuestionAnswer" > </textarea>
+                        
+                <textarea placeholder="Veuillez entrer votre réponse ici" asp-for="@Model.AnswerViewModel[0].FreeQuestionAnswer"> </textarea>
                     <span asp-validation-for="@Model.AnswerViewModel[0].FreeQuestionAnswer" class="text-danger"></span>
                     
 
                     <div class="form-group">
-                        <label asp-for="@Model.Comment" class="control-label"> Ajouter un commentaire ici si besoin </label>
-                        <textarea asp-for="@Model.Comment" > </textarea>
+                    <textarea placeholder="Ajouter un commentaire ici si besoin" asp-for="@Model.Comment"> </textarea>
                         <span asp-validation-for="@Model.Comment" class="text-danger"></span>
                     </div>
 
@@ -82,13 +86,13 @@
                     <input asp-for="QuestionViewModel.ActualQuestionNumber" type="hidden"/>
 
                     <input asp-for="@Model.Passage.ApplicationUserId" type="hidden"/>
-
+                    
             }
             
 
 
 
-            <input type="submit" value="Valider" class="btn btn-primary" />
+            <input type="submit" value="Valider" class="btn btn-primary w-100 mt-2 p-2 shadow-lg" />
 
         </form>
         <h2>@TempData["AlertMessage"]</h2>
@@ -98,7 +102,7 @@
 
 </div>
 
-
+</div>
 
 
 

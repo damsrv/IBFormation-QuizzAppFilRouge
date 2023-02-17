@@ -38,6 +38,14 @@ html {
   background-repeat: no-repeat;
 }
 
+.w-5 {
+  width: 3rem;
+}
+
+.h-5 {
+  height: 3rem;
+}
+
 .accueil {
   background-image: url(https://img.freepik.com/vecteurs-libre/fond-geometrique-plat_23-2148957201.jpg?w=2000&t=st=1676629007~exp=1676629607~hmac=be2fbfc34ec880a8847844b888766241465eda5030b7fbd269f8e4c092068c21);
   background-position: center;

@@ -96,13 +96,14 @@ namespace QuizzAppFilRouge.Domain
         {
             // Permet de récupéré toute les infos d'un QUizz
             var quizz = await context.Quizzes
-            .Include(quizz => quizz.Passages) // Le include permet de faire des Jointures
-                .ThenInclude(passage => passage.ApplicationUser)
-            .Include(question => question.Questions)
-                .ThenInclude(question => question.Answers)
-            .Include(response => response.Responses)
-            .Include(user => user.QuizzCreator)
-            .FirstOrDefaultAsync(quizz => quizz.Id == id);
+                .Include(quizz => quizz.Passages) // Le include permet de faire des Jointures
+                    .ThenInclude(passage => passage.ApplicationUser)
+                .Include(question => question.Questions)
+                    .ThenInclude(question => question.Answers)
+                .Include(response => response.Responses)
+                .Include(user => user.QuizzCreator)
+                .FirstOrDefaultAsync(quizz => quizz.Id == id);
+                
 
 
             //var quizz = context.Quizzes

@@ -10,6 +10,5 @@
     
         public Question Question { get; set; }
 
-
     }
 }

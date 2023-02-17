@@ -8,6 +8,9 @@ namespace QuizzAppFilRouge.Models.QuizzViewModels
     public class PassingQuizzViewModel
     {
         public Passage Passage { get; set; }
+
+        public string? Comment { get; set; }
+
         public QuizzViewModel QuizzViewModel { get; set; }
 
         public QuestionViewModel QuestionViewModel { get; set; }

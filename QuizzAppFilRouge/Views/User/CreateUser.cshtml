@@ -14,16 +14,10 @@
 
     <div class="col-md-4">
 
-
-
-            
-
         <form method="post">
             <h4>Créer un nouveau User : </h4>
 
             <hr />
-
-
 
             <div asp-validation-summary="All" class="text-danger">
                 
@@ -77,19 +71,6 @@
             </div>
         </form>
     </div>
-
-    @*@<partial name="~Views\Role\AddRole.cshtml" />*@
-
-    @{
-        // ne marche pas ... A voir pk
-        if (ViewBag.SuccessMessage != null)
-        {
-                     <div>
-                @ViewBag.SuccessMessage
-                     </div>
-        }
-    }
-
 
     @* Ajout vérification coté navigateur *@
     @section Scripts

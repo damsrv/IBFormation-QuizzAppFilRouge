@@ -5,7 +5,7 @@
 
 <h1>Quizz n°@Model.QuizzViewModel.Id</h1>
 
-<h1>Question n°@Model.QuestionViewModel.ActualQuestionNumber / @Model.QuizzViewModel.TotalQuestionsQuizz</h1>
+<h1>Question n°@(Model.QuestionViewModel.ActualQuestionNumber + 1)/ @Model.QuizzViewModel.TotalQuestionsQuizz</h1>
 
 
 <div class="row">
@@ -18,27 +18,73 @@
                 @Model.QuestionViewModel.ActualQuestion.Content
             </div>
 
-
-            @for (var index = 0; index < @Model.AnswerViewModel.Count; index++)
+            @if (Model.QuestionViewModel.QuestionType == QuestionTypeEnum.QCM)
             {
-                    <input type="checkbox" asp-for="@Model.AnswerViewModel[index].IsChecked" class="form-check-input" />
-                    <label class="form-check-label" asp-for="@Model.AnswerViewModel[index].IsChecked">
+
+                @for (var index = 0; index < @Model.AnswerViewModel.Count; index++)
+                {
+                            <input type="checkbox" asp-for="@Model.AnswerViewModel[index].IsChecked" class="form-check-input" />
+                            <label class="form-check-label" asp-for="@Model.AnswerViewModel[index].IsChecked">
                         @Model.AnswerViewModel[index].Content 
-                    </label>
-                        <input type="hidden" asp-for="@Model.AnswerViewModel[index].Id" />
-                        <input type="hidden" asp-for="@Model.AnswerViewModel[index].Content" />
-                    <br />
+                            </label>
+                            <input type="hidden" asp-for="@Model.AnswerViewModel[index].Id" />
+                            <input type="hidden" asp-for="@Model.AnswerViewModel[index].Content" />
+@*   ne marche pas           <span asp-validation-for="@Model.AnswerViewModel[0].IsChecked" class="text-danger"></span>
+*@
+
+                            <br />
+                }
+
+
+
+                <div class="form-group">
+                    <label asp-for="@Model.Comment" class="control-label"> Ajouter un commentaire si besoin :</label>
+                    <textarea asp-for="@Model.Comment" > </textarea>
+                    <span asp-validation-for="@Model.Comment" class="text-danger"></span>
+                </div>
+
+                // Hidden fields
+                <input asp-for="QuizzViewModel.TotalQuestionsQuizz" type="hidden"/>
+                <input asp-for="QuizzViewModel.Id" type="hidden"/>
+
+                <input asp-for="QuestionViewModel.Id" type="hidden"/>
+                <input asp-for="QuestionViewModel.QuestionType" type="hidden"/>
+                    
+
+
+                <input asp-for="QuestionViewModel.ActualQuestion.Id" type="hidden"/>
+                <input asp-for="QuestionViewModel.ActualQuestionNumber" type="hidden"/>
+
+                <input asp-for="@Model.Passage.ApplicationUserId" type="hidden"/>
+                
             }
+            else if (Model.QuestionViewModel.QuestionType == QuestionTypeEnum.FreeQuestion)
+            {
+                        <label asp-for="@Model.AnswerViewModel[0].FreeQuestionAnswer" class="control-label"> Veuillez entrer votre réponse ici </label>
+                    <textarea asp-for="@Model.AnswerViewModel[0].FreeQuestionAnswer" > </textarea>
+                    <span asp-validation-for="@Model.AnswerViewModel[0].FreeQuestionAnswer" class="text-danger"></span>
+                    
+
+                    <div class="form-group">
+                        <label asp-for="@Model.Comment" class="control-label"> Ajouter un commentaire ici si besoin </label>
+                        <textarea asp-for="@Model.Comment" > </textarea>
+                        <span asp-validation-for="@Model.Comment" class="text-danger"></span>
+                    </div>
 
 
-            <input asp-for="QuizzViewModel.TotalQuestionsQuizz" type="hidden"/>
-            <input asp-for="QuizzViewModel.Id" type="hidden"/>
+                    // Hidden fields
+                    <input asp-for="QuizzViewModel.TotalQuestionsQuizz" type="hidden"/>
+                    <input asp-for="QuizzViewModel.Id" type="hidden"/>
 
-            <input asp-for="QuestionViewModel.Id" type="hidden"/>
-            <input asp-for="QuestionViewModel.ActualQuestion.Id" type="hidden"/>
-            <input asp-for="QuestionViewModel.ActualQuestionNumber" type="hidden"/>
+                    <input asp-for="QuestionViewModel.Id" type="hidden"/>
+                    <input asp-for="QuestionViewModel.QuestionType" type="hidden"/>
+                    <input asp-for="QuestionViewModel.ActualQuestion.Id" type="hidden"/>
+                    <input asp-for="QuestionViewModel.ActualQuestionNumber" type="hidden"/>
 
-            <input asp-for="@Model.Passage.ApplicationUserId" type="hidden"/>
+                    <input asp-for="@Model.Passage.ApplicationUserId" type="hidden"/>
+
+            }
+            
 
 
 

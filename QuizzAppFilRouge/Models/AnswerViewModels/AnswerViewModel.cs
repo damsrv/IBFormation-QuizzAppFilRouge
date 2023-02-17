@@ -4,6 +4,7 @@ using QuizzAppFilRouge.Data.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using QuizzAppFilRouge.Data.Entities;
+using QuizzAppFilRouge.Models.UserViewModels;
 
 namespace QuizzAppFilRouge.Models.AnswerViewModels
 {
@@ -18,10 +19,34 @@ namespace QuizzAppFilRouge.Models.AnswerViewModels
 
         public Question Question { get; set; }
 
-        public bool IsChecked { get; set; } = false;
+        // Validation ne marche pas à voir plus tard
+        [CheckBoxRequired(ErrorMessage = "Veuillez cocher au moins une réponse")]
+        public bool IsChecked { get; set; }
+
+        public string FreeQuestionAnswer { get; set; }
+
+
+
 
     }
 
+    public class CheckBoxRequiredAttribute : ValidationAttribute
+    {
+        
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            //get the entered value
+            
+            var answer = (AnswerViewModel)validationContext.ObjectInstance;
+            //Check whether the IsAccepted is selected or not.
+            if (answer.IsChecked == false)
+            {
+                //if not checked the checkbox, return the error message.
+                return new ValidationResult(ErrorMessage == null ? "Please checked the checkbox" : ErrorMessage);
+            }
+            return ValidationResult.Success;
+        }
 
+    }
 }
 

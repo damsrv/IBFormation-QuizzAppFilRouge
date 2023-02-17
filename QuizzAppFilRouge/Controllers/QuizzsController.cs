@@ -29,7 +29,7 @@ namespace QuizzAppFilRouge.Controllers
         private readonly IQuestionRepository questionRepository;
         private UserManager<IdentityUser> userManager;
         private readonly IAnswerRepository answerRepository;
-        PassingQuizzViewModel passingQuizzViewModel = new PassingQuizzViewModel();
+        //PassingQuizzViewModel passingQuizzViewModel = new PassingQuizzViewModel();
 
 
         // Constructor
@@ -121,28 +121,33 @@ namespace QuizzAppFilRouge.Controllers
         /**
          * Méthode pour le passage des quizzs
          * Recoit une URL avec un id de quizz et le numéro de la question en cours.
+         * // GET
          */
-        public async Task<IActionResult> PassQuizz(int quizzId, int actualQuestionNumber = 1)
+        public async Task<IActionResult> PassQuizz(int quizzId, int actualQuestionNumber = 0)
         {
-            // Récupère toutes les infos du Quizz
-       
-                var passingQuizz = await quizzsRepository.GetQuizzById(quizzId);
 
             
+            // Récupère toutes les infos du Quizz
+            var passingQuizz = await quizzsRepository.GetQuizzById(quizzId);
+
+            // Trie temporairemet en commencant par une question Libre pour test
+            passingQuizz.Questions = passingQuizz.Questions
+                .OrderByDescending(question => question.Id == 65).ToList();
 
 
             // Calcule le nombre de questions dans le Quizz
             var totalQuestionsQuizz = passingQuizz.Questions.Count;
 
-            // Récupère la question qu'on veut afficher
-            var actualQuestion = passingQuizz.Questions.ElementAt(actualQuestionNumber-1);
 
+            // Récupère la question qu'on veut afficher
+            var actualQuestion = passingQuizz.Questions.ElementAt(actualQuestionNumber);
 
             var questionViewModel = new QuestionViewModel
             {
                 ActualQuestion = actualQuestion,
                 ActualQuestionNumber = actualQuestionNumber,
-                Id = quizzId,
+                Id = actualQuestion.Id,
+                QuestionType = actualQuestion.QuestionType,
             };
 
             var quizzViewModel = new QuizzViewModel
@@ -151,28 +156,59 @@ namespace QuizzAppFilRouge.Controllers
                 TotalQuestionsQuizz = totalQuestionsQuizz,
             };
 
-            List<AnswerViewModel> answerList = new List<AnswerViewModel>();
 
-            foreach (var answer in actualQuestion.Answers)
+            PassingQuizzViewModel passingQuizzViewModel = new PassingQuizzViewModel();
+
+            // Si QCM on créer une liste de question
+            if (actualQuestion.QuestionType == QuestionTypeEnum.QCM)
             {
+                List<AnswerViewModel> answerList = new List<AnswerViewModel>();
+
+                foreach (var answer in actualQuestion.Answers)
+                {
+                    var answerViewModel = new AnswerViewModel
+                    {
+                        Id = answer.Id,
+                        Content = answer.Content,
+                    };
+                    answerList.Add(answerViewModel);
+
+                }
+
+
+                passingQuizzViewModel.QuizzViewModel = quizzViewModel;
+                passingQuizzViewModel.QuestionViewModel = questionViewModel;
+                passingQuizzViewModel.AnswerViewModel = answerList;
+                passingQuizzViewModel.Passage = passingQuizz.Passages;
+                passingQuizzViewModel.Comment = "";
+            }
+            // Pour les free questions
+            else if (actualQuestion.QuestionType == QuestionTypeEnum.FreeQuestion)
+            {
+                List<AnswerViewModel> answerList = new List<AnswerViewModel>();
+
                 var answerViewModel = new AnswerViewModel
                 {
-                    Id = answer.Id,
-                    Content= answer.Content,
+                    Id = 0,
+                    Content = "",
+                    FreeQuestionAnswer = ""
                 };
+
                 answerList.Add(answerViewModel);
 
+                passingQuizzViewModel.QuizzViewModel = quizzViewModel;
+                passingQuizzViewModel.QuestionViewModel = questionViewModel;
+                passingQuizzViewModel.AnswerViewModel = answerList;
+                passingQuizzViewModel.Passage = passingQuizz.Passages;
+                passingQuizzViewModel.Comment = "";
             }
 
-            passingQuizzViewModel.QuizzViewModel = quizzViewModel;
-            passingQuizzViewModel.QuestionViewModel = questionViewModel;
-            passingQuizzViewModel.AnswerViewModel = answerList;
-            passingQuizzViewModel.Passage = passingQuizz.Passages;
 
             //Plus necessaire car checkbox fonctionne.
             //keepPassingQuizzViewModelInfo(passingQuizzViewModel);
 
             return View(passingQuizzViewModel);
+
         }
 
         //Plus necessaire car checkbox fonctionne.
@@ -185,40 +221,116 @@ namespace QuizzAppFilRouge.Controllers
         //    return passingQuizzViewModel;
         //}
 
+        // POST
         [HttpPost]
         public async Task<IActionResult> PassQuizz(PassingQuizzViewModel passingQuizzViewModel)
         {
-            var choosenAnswer = passingQuizzViewModel.AnswerViewModel
-                .Select(answer => answer)
-                .Where(answer => answer.IsChecked == true)
-                .First();
+            // Si le numero de l'actuelle question est inf ou égale
+            // au nombre de question du quizz
+            if ( passingQuizzViewModel.QuestionViewModel.ActualQuestionNumber < passingQuizzViewModel.QuizzViewModel.TotalQuestionsQuizz - 1 )
+            {
+                // Si question = QCM
+                if (passingQuizzViewModel.QuestionViewModel.QuestionType == QuestionTypeEnum.QCM)
+                {
+                    // metre un e condition si checkbox vide
 
-            // Faire la comparaison avec la bonne réponse de suite afin d'enregistrer en base dans 
-            // la colonne IsCorrect si c'est la bonne réponse ou pas que l'user à choisit
+                    // Cherche dans la liste des réponses QCM laquelle est checkée
+                    var choosenAnswerViewModel = passingQuizzViewModel.AnswerViewModel
+                    .Select(answer => answer)
+                    .Where(answer => answer.IsChecked == true)
+                    .First();
 
-            // A FAIRE CREER DIRECT OBJET REPONSE ET LE PASSER A LA METHODE ADDRESPONSE;
-            //var userResponse = new Response
-            //{
-            //    Content = 
-            //}
+                    // créer un object Answer avec l'id et le content de la question selectionnée
+                    var choosenAnswer = new Answer
+                    {
+                        Id = choosenAnswerViewModel.Id,
+                        Content = choosenAnswerViewModel.Content,
+                    };
 
 
-            responseRepository.AddResponse
-            (
-                new Answer { Id = choosenAnswer.Id },
-                passingQuizzViewModel.QuizzViewModel.Id,
-                passingQuizzViewModel.QuestionViewModel.Id,
-                passingQuizzViewModel.Passage.ApplicationUserId
-            );
+                    // 1 Aller récupérer la bonne réponse pour la question en cours
+                    var goodAnswer = await answerRepository
+                        .getGoodAnswerByQuestion(passingQuizzViewModel.QuestionViewModel.Id);
 
-            //var quizzViewModel = getPassingQuizzViewModelInfo();
+                    // 2 Vérifier si la choosen answer est la bonne réponse
+                    var isCorrect = IsAGoodReponse(choosenAnswer, goodAnswer);
+
+                    // Créer l'objet réponse à envoyé en base
+                    var applicantResponse = new Response
+                    {
+                        Content = choosenAnswer.Content,
+                        IsCorrect = isCorrect,
+                        Comment = passingQuizzViewModel.Comment,
+                    };
+
+                    // Ajoute la réponse du user à la question dans la table response OK JUSQUICI
+                    await responseRepository.AddResponse
+                    (
+                        applicantResponse,
+                        passingQuizzViewModel.QuizzViewModel.Id,
+                        passingQuizzViewModel.QuestionViewModel.Id
+
+                    );
+
+                    var returnObject = new
+                    {
+                        quizzId = passingQuizzViewModel.QuizzViewModel.Id,
+                        actualQuestionNumber = (passingQuizzViewModel.QuestionViewModel.ActualQuestionNumber + 1)
+
+                    };
+
+
+                    return RedirectToAction("PassQuizz", "Quizzs", returnObject);
+                }
+                // Si question est FreeQuestion
+                else if (passingQuizzViewModel.QuestionViewModel.QuestionType == QuestionTypeEnum.FreeQuestion)
+                {
+                    var freeQuestionAnswer = passingQuizzViewModel.AnswerViewModel[0].FreeQuestionAnswer;
+                    // Créer l'objet réponse à envoyé en base
+                    var applicantResponse = new Response
+                    {
+                        Content = freeQuestionAnswer,
+                        Comment = passingQuizzViewModel.Comment,
+                        //IsCorrect = null
+                    };
+
+                    // reprendre ici pour les questions free
+
+                    // marche + ou - 
+                    // ajouter null en base dans colonne IsCorrect pour les freequestion
+                    // refaire une méthode dans le repo spé pour les freeQ
+                    await responseRepository.AddResponseForFreeQuestions
+                    (
+                        applicantResponse,
+                        passingQuizzViewModel.QuizzViewModel.Id,
+                        passingQuizzViewModel.QuestionViewModel.Id
+
+                    );
+
+                    var returnObject = new
+                    {
+                        quizzId = passingQuizzViewModel.QuizzViewModel.Id,
+                        actualQuestionNumber = (passingQuizzViewModel.QuestionViewModel.ActualQuestionNumber + 1)
+
+                    };
+
+
+                    return RedirectToAction("PassQuizz", "Quizzs", returnObject);
+                }
+            }
+            else
+            {
+                return View("ThanksMessage");
+
+            }
 
             return View();
+
         }
 
-//////////////////////////////////////////////////////////////////////////////////////
-//// GETALLQUIZZS AND GETALLQUIZZSBYID (A FAIRE) FUNCTIONS 
-//////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+        //// GETALLQUIZZS AND GETALLQUIZZSBYID (A FAIRE) FUNCTIONS 
+        //////////////////////////////////////////////////////////////////////////////////////
 
         //OK
         // GET: Quizzs
@@ -814,6 +926,12 @@ namespace QuizzAppFilRouge.Controllers
             // Permet de récupérer l'id du user actuellement connecté
             var loggedUserId = userManager.GetUserId(User); // Get user id:
             return loggedUserId;
+
+        }
+
+        public bool IsAGoodReponse(Answer choosenAnswer, Answer goodAnswer)
+        {
+            return choosenAnswer.Id == goodAnswer.Id;
 
         }
 

@@ -9,7 +9,10 @@ namespace QuizzAppFilRouge.Domain
 
         Task<List<Answer>> getAnswerByQuestionId(int questionId);
 
+        Task<Answer> getGoodAnswerByQuestion(int questionId);
+
         //Task<Answer> getAllAnswers();
+
     }
 
 
@@ -23,6 +26,9 @@ namespace QuizzAppFilRouge.Domain
             this.context = context;
 
         }
+
+
+
         public async Task<List<Answer>> getAnswerByQuestionId(int questionId)
         {
             var answers = await context.Answers
@@ -30,6 +36,17 @@ namespace QuizzAppFilRouge.Domain
                 .ToListAsync(); 
 
             return answers;
+        }
+
+        public async Task<Answer> getGoodAnswerByQuestion(int questionId)
+        {
+            var goodAnswer = await context.Answers
+                .Select(answer => answer)
+                .Where(answer => answer.Question.Id == questionId
+                        && answer.IsARightAnswer == true)
+                .FirstAsync();
+            
+            return goodAnswer;
         }
     }
 

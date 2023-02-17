@@ -2,47 +2,50 @@
 @using QuizzAppFilRouge.Models.QuizzViewModels;
 @model PassingQuizzViewModel?;
 
-
-<h1>Quizz n°@Model.QuizzViewModel.Id</h1>
-
-<h1>Question n°@(Model.QuestionViewModel.ActualQuestionNumber + 1)/ @Model.QuizzViewModel.TotalQuestionsQuizz</h1>
-
 @{
-    ViewBag.BodyClass = "background-quizz";
+    ViewBag.BodyClass = "bg-gradient-body";
 }
+
+
 <div class="col-6">
 <div class="row">
     <div class="card shadow-lg p-4 m-2 align-items-center">
-      <img width="128" height="128"  src="~/assets/images/DesignQuizz.png"/>
+        <h2>Quizz n°@Model.QuizzViewModel.Id</h2>
+
+<h3>Question n°@(Model.QuestionViewModel.ActualQuestionNumber + 1)/ @Model.QuizzViewModel.TotalQuestionsQuizz</h3>
+      <img width="128" height="128"  src="~/assets/images/QuizzLogo.png"/>
 
         <form method="post" asp-action="PassQuizz">
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="my-4"> 
+            <div class="my-4" style="font-weight:700;"> 
                 @Model.QuestionViewModel.ActualQuestion.Content
             </div>
 
             @if (Model.QuestionViewModel.QuestionType == QuestionTypeEnum.QCM)
             {
 
+                     <div id="checklist">
                 @for (var index = 0; index < @Model.AnswerViewModel.Count; index++)
                 {
+
                             <input type="checkbox" asp-for="@Model.AnswerViewModel[index].IsChecked" class="form-check-input"/>
                             <label class="form-check-label" asp-for="@Model.AnswerViewModel[index].IsChecked">
                         @Model.AnswerViewModel[index].Content 
                             </label>
+
                             <input type="hidden" asp-for="@Model.AnswerViewModel[index].Id" />
                             <input type="hidden" asp-for="@Model.AnswerViewModel[index].Content" />
 @*   ne marche pas           <span asp-validation-for="@Model.AnswerViewModel[0].IsChecked" class="text-danger"></span>
 *@
 
-                            <br />
                 }
+</div>
 
 
 
-                <div class="form-group">
+                <div class="form-group mt-4">
                     <label asp-for="@Model.Comment" class="control-label"> Ajouter un commentaire si besoin :</label>
                     <textarea placeholder="Veuillez entrer votre réponse ici" asp-for="@Model.Comment"> </textarea>
                     <span asp-validation-for="@Model.Comment" class="text-danger"></span>

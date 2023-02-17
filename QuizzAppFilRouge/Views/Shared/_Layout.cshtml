@@ -25,55 +25,74 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QuizzAppFilRouge.styles.css" asp-append-version="true" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
 </head>
 <body class="@ViewBag.BodyClass">
     <header>
     </header>
     <div class="d-flex gap-4 ">
-       @if (User.Identity.IsAuthenticated)
-{
-        <div class="col-2 d-flex flex-column p-3 shadow bg-light vh-100  @GetBodyClass()">
-            <ul class="list-unstyled d-flex flex-column gap-3">
-                <li class="d-flex align-items-center w-100">
-                    <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3" href="https://localhost:7256/">
-                    <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/2163/2163350.png" />Accueil</a>
+       @if (!User.Identity.IsAuthenticated)
+        {
+
+                        <nav class="sidebar">
+            <div class="custom-menu">
+                <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                <i class="fa fa-bars"></i>
+                <span class="sr-only">Ouvrir le menu</span>
+                </button>
+            </div>
+            <div class="p-4">
+                <h1>
+                <a href="index.html" class="logo"
+                    >Quizzee <span>la plateforme entreprise pour les quizz candidats</span></a
+                >
+                </h1>
+                <ul class="list-unstyled components mb-5">
+                <li class="active">
+                    <a href="#"><span class="fa fa-home mr-3"></span> Accueil</a>
                 </li>
                 <li>
-                <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3" href="https://localhost:7256/">
-                <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/5726/5726470.png" /> Quizz</a>
+                    <a href="#"><span class="fa fa-user mr-3"></span> Questions</a>
                 </li>
                 <li>
-                <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3" href="https://localhost:7256/">
-                <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/5726/5726470.png" /> 
-                Question</a>
+                    <a href="#"><span class="fa fa-briefcase mr-3"></span> Quizz</a>
                 </li>
                 <li>
-                <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3 " href="https://localhost:7256/">
-                <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/5726/5726470.png" /> 
-                Agence</a>
+                    <a href="#"><span class="fa fa-sticky-note mr-3"></span> Agence</a>
                 </li>
-                                <li>
-                <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3 " href="https://localhost:7256/">
-                <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/5726/5726470.png" /> 
-                Utilisateurs</a>
+                <li>
+                    <a href="#"><span class="fa fa-suitcase mr-3"></span> Utilisateurs</a>
                 </li>
-                                <li>
-                <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3 " href="https://localhost:7256/">
-                <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/5726/5726470.png" /> 
-                Lorem</a>
+                <li>
+                    <a href="#"><span class="fa fa-cogs mr-3"></span> Services</a>
                 </li>
-                                <li>
-                <a class="w-100 d-flex align-items-center shadow-lg gap-2 p-2 border-20-px  rounded-lg d-flex text-center p-3 " href="https://localhost:7256/">
-                <img height="16" width="16" src="https://cdn-icons-png.flaticon.com/512/5726/5726470.png" /> 
-                Lorem</a>
+                <li>
+                    <a href="#"
+                    ><span class="fa fa-paper-plane mr-3"></span> Contacts</a
+                    >
                 </li>
+                </ul>
 
-            </ul>
 
-        </div>
+                <div class="footer">
+                <p>
+                    Copyright &copy;
+                    <script>
+                    document.write(new Date().getFullYear());
+                    </script>
+                </p>
+                </div>
+            </div>
+            </nav>
 
-}
+        }
 
 
 

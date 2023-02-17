@@ -2,6 +2,10 @@ html {
   font-size: 14px;
 }
 
+body {
+  font-family: "Poppins", sans-serif !important;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -35,7 +39,7 @@ html {
 }
 
 .accueil {
-  background-image: url(https://img.freepik.com/vecteurs-libre/papier-peint-geometrique-degrade_23-2148818330.jpg?w=1060&t=st=1676465147~exp=1676465747~hmac=b751c045ee1dd00f5fef93ecc605d0fb1cfaf5e6a51d6b0c70948e296cc0df74);
+  background-image: url(https://img.freepik.com/vecteurs-libre/fond-geometrique-plat_23-2148957201.jpg?w=2000&t=st=1676629007~exp=1676629607~hmac=be2fbfc34ec880a8847844b888766241465eda5030b7fbd269f8e4c092068c21);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -52,10 +56,9 @@ html {
   justify-content: center;
 }
 
-.card{
-    border-radius: 20px;
+.card {
+  border-radius: 20px;
 }
-
 
 .bg-login {
   background-image: url(https://img.freepik.com/vecteurs-libre/fond-abstrait-geometrique-plat_23-2149447623.jpg?w=1060&t=st=1676389903~exp=1676390503~hmac=ea33f7bb80c330bc0075222ea03b2b0cfe68441df3e12bdf2dfa261753544594);
@@ -69,34 +72,66 @@ html {
 }
 
 .bg-gradient-pink {
-    background: #ec008c; /* fallback for old browsers */
-    background: -webkit-linear-gradient( to right, #fc6767, #ec008c ); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient( to right, #fc6767, #ec008c ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: #ec008c; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #fc6767,
+    #ec008c
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #fc6767,
+    #ec008c
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .bg-gradient-purple {
-    background: #7f00ff; /* fallback for old browsers */
-    background: -webkit-linear-gradient( to left, #e100ff, #7f00ff ); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient( to left, #e100ff, #7f00ff ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: #7f00ff; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to left,
+    #e100ff,
+    #7f00ff
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to left,
+    #e100ff,
+    #7f00ff
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .bg-gradient-green {
-    background: #11998e; /* fallback for old browsers */
-    background: -webkit-linear-gradient( to left, #38ef7d, #11998e ); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient( to left, #38ef7d, #11998e ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: #11998e; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to left,
+    #38ef7d,
+    #11998e
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to left,
+    #38ef7d,
+    #11998e
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .bg-gradient-yellow {
-    background: #ffe000; /* fallback for old browsers */
-    background: -webkit-linear-gradient( to left, #799f0c, #ffe000 ); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient( to left, #799f0c, #ffe000 ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: #ffe000; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to left,
+    #799f0c,
+    #ffe000
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to left,
+    #799f0c,
+    #ffe000
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .Quizz-page {
-    background-image: url(https://img.freepik.com/psd-gratuit/formes-abstraites-fond-blanc_1297-153.jpg?w=740&t=st=1676508166~exp=1676508766~hmac=18ab6acb7362548c60eeacbe04de83d7d73e04216c101668d74240b054a68731);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+  background-image: url(https://img.freepik.com/psd-gratuit/formes-abstraites-fond-blanc_1297-153.jpg?w=740&t=st=1676508166~exp=1676508766~hmac=18ab6acb7362548c60eeacbe04de83d7d73e04216c101668d74240b054a68731);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /*input:focus {
@@ -105,5 +140,107 @@ html {
     box-shadow: 0 0 10px #719ECE;
 }*/
 input {
-    outline-color: black;
+  outline-color: black;
+}
+.sidebar {
+  min-width: 270px;
+  max-width: 270px;
+  background: #3445b4;
+  color: #fff;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+  position: relative;
+}
+.sidebar .h6 {
+  color: #fff;
+}
+.sidebar.active {
+  margin-left: -270px;
+}
+.sidebar h1 {
+  margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 30px;
+}
+.sidebar h1 .logo {
+  color: #fff;
+}
+.sidebar h1 .logo span {
+  font-size: 14px;
+  color: #44bef1;
+  display: block;
+}
+.sidebar ul.components {
+  padding: 0;
+}
+.sidebar ul li {
+  font-size: 16px;
+}
+.sidebar ul li > ul {
+  margin-left: 10px;
+}
+.sidebar ul li > ul li {
+  font-size: 14px;
+}
+.sidebar ul li a {
+  padding: 10px 0;
+  display: block;
+  color: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.sidebar ul li a span {
+  color: #44bef1;
+}
+.sidebar ul li a:hover {
+  color: #fff;
+}
+.sidebar ul li.active > a {
+  background: transparent;
+  color: #fff;
+}
+
+.sidebar .custom-menu {
+  display: inline-block;
+  position: absolute;
+  top: 20px;
+  right: 0;
+  margin-right: -20px;
+  -webkit-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.sidebar .custom-menu .btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  position: relative;
+}
+.sidebar .custom-menu .btn i {
+  margin-right: -40px;
+  font-size: 14px;
+}
+.sidebar .custom-menu .btn.btn-primary {
+  background: transparent;
+  border-color: transparent;
+}
+.sidebar .custom-menu .btn.btn-primary:after {
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  content: "";
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #3445b4;
+  border-radius: 10px;
+}
+.sidebar .custom-menu .btn.btn-primary:hover,
+.sidebar .custom-menu .btn.btn-primary:focus {
+  background: transparent !important;
+  border-color: transparent !important;
 }

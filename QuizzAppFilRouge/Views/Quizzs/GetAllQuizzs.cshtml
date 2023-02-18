@@ -32,6 +32,9 @@
             <th>
                 Candidat
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ValidationCode)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -59,9 +62,25 @@
 
             </td>
             <td>
+                @quizz.ValidationCode
+            </td>
+            <td>
                 <a asp-action="Edit" asp-route-id="@quizz.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@quizz.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@quizz.Id">Delete</a>
+                <a asp-controller = "Email" asp-action="Index" 
+                    asp-route-validationCode="@quizz.ValidationCode" 
+                    asp-route-firstName="@quizz.Passages.ApplicationUser.FirstName" 
+                    asp-route-lastName="@quizz.Passages.ApplicationUser.LastName"
+                    asp-route-quizzId="@quizz.Passages.QuizzId"
+                    asp-route-applicantId="@quizz.Passages.ApplicationUserId"> 
+                Envoyer Code de validation
+                </a> |
+                <a asp-action="GetQuizzResults" asp-route-quizzId="@quizz.Id">Extraire formulaire de résultats</a> |
+
+                <a asp-action="GetFreeQuestionResponse" asp-route-quizzId="@quizz.Id">Extraire questions libres pour correction</a> |
+
+                <a asp-controller="Responses" asp-action="CorrectFreeQuestionsResponses" asp-route-quizzId="@quizz.Id">Ajouter correction pour les questions libres</a> |
             </td>
         </tr>
 }

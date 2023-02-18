@@ -10,7 +10,9 @@ namespace QuizzAppFilRouge.Domain
     public interface IQuizzRepository
     {
 
-        Task<IEnumerable<Quizz>> GetAll();
+        Task<List<Quizz>> GetAll();
+
+        Task<List<Quizz>> GetQuizzCreatedByUser(string idUser);
 
         Task<Quizz> Details(int? id);
 
@@ -36,6 +38,7 @@ namespace QuizzAppFilRouge.Domain
 
         Task<string> GetValidationCode(int quizzId);
 
+
     }
 
 
@@ -53,7 +56,7 @@ namespace QuizzAppFilRouge.Domain
             this.userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<Quizz>> GetAll()
+        public async Task<List<Quizz>> GetAll()
         {
 
             var quizzs = await context.Quizzes
@@ -62,21 +65,19 @@ namespace QuizzAppFilRouge.Domain
                 .Include(user => user.QuizzCreator)
                 .ToListAsync();
 
-            //foreach (var quizz in quizzs)
-            //{
-                
-            //    var passage = quizz.Passages.ToList();
+            return quizzs;
+        }
 
-            //    var identityUserId = passage[0].IdentityUserId;
+        public async Task<List<Quizz>> GetQuizzCreatedByUser(string idUser)
+        {
 
-            //    var userInfo = await GetUserInfoById(identityUserId);
+            var quizzs = await context.Quizzes
+                .Where(quizz => quizz.QuizzCreator.Id == idUser)
+                .Include(quizz => quizz.Passages)// Le include permet de faire des Jointures
+                    .ThenInclude(passage => passage.ApplicationUser)
+                .Include(user => user.QuizzCreator)
+                .ToListAsync();
 
-
-            //}
-
-            //var userInfo = GetUserInfoById(quizz)
-
-            //var quizzs = await context.Quizzes.ToListAsync();
             return quizzs;
         }
 
@@ -104,10 +105,6 @@ namespace QuizzAppFilRouge.Domain
                 .Include(user => user.QuizzCreator)
                 .FirstOrDefaultAsync(quizz => quizz.Id == id);
                 
-
-
-            //var quizz = context.Quizzes
-            //    .FirstOrDefaultAsync(quizz => quizz.Id == id);
 
             return quizz;
 
@@ -186,6 +183,8 @@ namespace QuizzAppFilRouge.Domain
 
             return quizz.ValidationCode;
         }
+
+
     }
 
 

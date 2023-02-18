@@ -1,0 +1,70 @@
+﻿@using QuizzAppFilRouge.Models.ResponseViewModel;
+@model List<ResponseViewModel>
+
+@{
+    ViewData["Title"] = "Correction";
+}
+
+<h1>Correction réponse libres quizz n° @Model[0].QuizzId</h1>
+
+<hr />
+
+        <form method="post">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            @for (int i = 0; i < Model.Count(); i++) // Boucle sur la liste de réponses libre
+            {
+                <h2>Contenu de la Question : </h2>
+                <h3>@Model[i].Question.Content </h3>
+
+                <h2>Contenu de la Réponse : </h2>
+                <h3> @Model[i].Content </h3>
+
+                <h2>Veuillez selectionner si la réponse est correcte ? </h2>
+
+                
+                    <input type="checkbox" asp-for="@Model[i].IsTrue" class="form-check-input" />
+                        <label class="form-check-label" asp-for="@Model[i].IsTrue"> Vrai</label>
+
+                    <input type="checkbox" asp-for="@Model[i].IsFalse" class="form-check-input"/>
+                        <label class="form-check-label" asp-for="@Model[i].IsFalse"> Faux </label>
+                
+                <input type="hidden" asp-for="@Model[i].Question.Id" />
+                <input type="hidden" asp-for="@Model[i].QuizzId" />
+
+
+            }
+
+
+
+            <input type="submit" value="Valider la correction" class="btn btn-primary" />
+
+        </form>
+
+
+
+@if (User.Identity.IsAuthenticated) // retourner ) la liste des quizzs
+{
+    bool isAdmin = false;
+
+    @if (User.IsInRole("Admin"))
+    {
+        isAdmin = true;
+    }
+        <a asp-controller="Quizzs" asp-action="GetAllQuizzs" asp-route-isAdmin="@isAdmin">Retourner à la liste des Quizzs</a>
+
+}
+
+@section Scripts 
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+    //$('input[type="checkbox"]').on('change', function() {
+    //    $(this).siblings('input[type="checkbox"]').prop('checked', false);
+    //});
+        $('input[type=checkbox]').removeAttr('checked');
+    </script>
+}

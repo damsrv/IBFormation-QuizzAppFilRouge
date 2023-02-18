@@ -5,6 +5,16 @@
 }
 
 
-<h1>Bienvenue sur l'interfacre de gestion des Quizzs</h1>
+<h1>Bienvenue sur l'interface de gestion des Quizzs</h1>
+ 
+@if (User.Identity.IsAuthenticated)
+{
+    bool isAdmin = false;
 
-<a asp-controller="Quizzs" asp-action="GetAllQuizzs">Liste des Quizzs</a>
+    @if (User.IsInRole("Admin"))
+    {
+        isAdmin = true;
+    }
+    <a asp-controller="Quizzs" asp-action="GetAllQuizzs" asp-route-isAdmin="@isAdmin">Liste des Quizzs</a>
+
+}

@@ -7,16 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuizzAppFilRouge.Data;
 using QuizzAppFilRouge.Data.Entities;
+using QuizzAppFilRouge.Domain;
+using QuizzAppFilRouge.Models.ResponseViewModel;
 
 namespace QuizzAppFilRouge.Controllers
 {
     public class ResponsesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IResponseRepository responseRepository;
 
-        public ResponsesController(ApplicationDbContext context)
+
+        public ResponsesController(ApplicationDbContext context, IResponseRepository responseRepository)
         {
             _context = context;
+            this.responseRepository = responseRepository;
+
         }
 
         // GET: Responses
@@ -25,6 +31,67 @@ namespace QuizzAppFilRouge.Controllers
             var applicationDbContext = _context.Responses.Include(r => r.ApplicationUser).Include(r => r.Question).Include(r => r.Quizz);
             return View(await applicationDbContext.ToListAsync());
         }
+
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //// CORRECT FREE QUESTIONS RESPONSE FUNCTIONS 
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        [HttpGet]
+        [Route("/Quizzs/CorrectFreeQuestionsResponses/{quizzId}")]
+        public async Task<IActionResult> CorrectFreeQuestionsResponses(int quizzId)
+        {
+
+            var freeQuestionsResponses = await responseRepository.GetFreeQuestionResponses(quizzId);
+
+            var listfreeQuestionsResponsesViewModel = new List<ResponseViewModel>();
+
+            foreach (var response in freeQuestionsResponses)
+            {
+                var responseViewModel = new ResponseViewModel
+                {
+                    Content = response.Content,
+                    ApplicationUser = response.ApplicationUser,
+                    Question = response.Question,
+                    Quizz = response.Quizz,
+                    IsCorrect = response.IsCorrect,
+                    QuizzId= quizzId
+                };
+
+                listfreeQuestionsResponsesViewModel.Add(responseViewModel);
+            }
+
+            return View(listfreeQuestionsResponsesViewModel);
+
+        }
+        // Fonctionne nickel !
+        [HttpPost]
+        [Route("/Quizzs/CorrectFreeQuestionsResponses/{quizzId}")]
+        public async Task<IActionResult> CorrectFreeQuestionsResponses(List<ResponseViewModel> correctedResponsesListViewModel)
+        {
+
+            //var freeQuestionsResponses = await responseRepository.GetFreeQuestionResponses(correctedResponsesListViewModel[0].QuizzId);
+
+
+            foreach (var responseViewModel in correctedResponsesListViewModel)
+            {
+                var correctedResponse = new Response
+                {
+                    QuestionId = responseViewModel.Question.Id,
+                    QuizzId = responseViewModel.QuizzId,
+                    IsCorrect = responseViewModel.IsTrue, 
+                    // IsCorrect est ce que le recruteur à décidé concernant la correction de la question
+                };
+
+                await responseRepository.AddCorrectionForFreeQuestion(correctedResponse);
+            }
+
+            return RedirectToAction("Index", "Quizzs");
+
+        }
+
+
+
 
         // GET: Responses/Details/5
         public async Task<IActionResult> Details(int? id)

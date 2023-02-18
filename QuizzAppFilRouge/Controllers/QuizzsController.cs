@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using QuizzAppFilRouge.Models.QuizzViewModels;
 using QuizzAppFilRouge.Models.QuestionViewModels;
 using QuizzAppFilRouge.Models.AnswerViewModels;
+using QuizzAppFilRouge.Models.ResponseViewModel;
 
 namespace QuizzAppFilRouge.Controllers
 {
@@ -61,11 +62,69 @@ namespace QuizzAppFilRouge.Controllers
 
         }
 
+        //////////////////////////////////////////////////////////////////////////////////////
+        //// GET FREE QUESTION RESPONSE FUNCTIONS 
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        [HttpGet]
+        public async Task<IActionResult> GetFreeQuestionResponse(int quizzId)
+        {
+
+            return RedirectToAction("CreatePDFForFreeAnwer", "PDF", new {id = quizzId });
+
+        }
+
+
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //// GetQUIZZRESULTS FUNCTIONS 
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        [HttpGet]
+        public async Task<IActionResult> GetQuizzResults(int quizzId)
+        {
+
+            var quizzResult = responseRepository.getQuizzResponses( quizzId );
+
+            // calcul le taux de bonne réponse
+
+
+
+            return View();
+
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> GetQuizzResults(QuizzViewModel quizzViewModel)
+        {
+
+            var isValidationCodeCorrect = await quizzsRepository.CheckValidationCode(quizzViewModel);
+
+            if (isValidationCodeCorrect)
+            {
+
+                return RedirectToAction("PassQuizz",
+                    new { quizzId = quizzViewModel.Id, questionNumber = 1 });
+
+            }
+
+            TempData["AlertMessage"] = "Votre code de validation n'est pas bon";
+
+            return View(quizzViewModel);
+
+        }
+
+
 
         //////////////////////////////////////////////////////////////////////////////////////
         //// PASSQUIZZ FUNCTIONS 
         //////////////////////////////////////////////////////////////////////////////////////
-        
+
 
         // TODO : Refactoriser les créations de quizzviewmodel et de quizz en fonctions
 
@@ -332,13 +391,24 @@ namespace QuizzAppFilRouge.Controllers
         //// GETALLQUIZZS AND GETALLQUIZZSBYID (A FAIRE) FUNCTIONS 
         //////////////////////////////////////////////////////////////////////////////////////
 
-        //OK
+        //Méthode récupère tout si admin connecté
+        // Uniquement Quizz créer par Recruiter si recruteur connecté
         // GET: Quizzs
-        public async Task<IActionResult> GetAllQuizzs()
+        [Route("/Quizz/GetAllQuizzs/{isAdmin}")]
+        public async Task<IActionResult> GetAllQuizzs(bool isAdmin)
         {
-            
+            var quizzes = new List<Quizz>();
 
-            var quizzes = await quizzsRepository.GetAll();
+            if (isAdmin)
+            {
+                quizzes = await quizzsRepository.GetAll();
+            }
+            // If recruiter
+            else
+            {
+                var userId = getLoggedUserId();
+                quizzes = await quizzsRepository.GetQuizzCreatedByUser(userId);
+            }
 
             var listQuizzViewModel = new List<QuizzViewModel>();
 
@@ -354,6 +424,36 @@ namespace QuizzAppFilRouge.Controllers
                     QuizzCreator = quizz.QuizzCreator,
                     QuizzLangage= quizz.QuizzLangage,
                     Passages= quizz.Passages,
+                });
+
+            }
+
+            return View(listQuizzViewModel);
+
+        }
+
+        //OK
+        // GET: Quizzs
+        public async Task<IActionResult> GetAllQuizzs()
+        {
+
+
+            var quizzes = await quizzsRepository.GetAll();
+
+            var listQuizzViewModel = new List<QuizzViewModel>();
+
+            foreach (var quizz in quizzes)
+            {
+
+                listQuizzViewModel.Add(new QuizzViewModel
+                {
+                    Id = quizz.Id,
+                    Notation = quizz.Notation,
+                    ValidationCode = quizz.ValidationCode,
+                    QuizzLevel = quizz.QuizzLevel,
+                    QuizzCreator = quizz.QuizzCreator,
+                    QuizzLangage = quizz.QuizzLangage,
+                    Passages = quizz.Passages,
                 });
 
             }

@@ -1,0 +1,22 @@
+﻿
+@using Microsoft.AspNetCore.Identity
+@using QuizzAppFilRouge.Data;
+@using QuizzAppFilRouge.Models.UserViewModels;
+
+@model EmailViewModel;
+
+<form method="post"> 
+
+
+    <div class="form-group"> 
+        <label asp-for="ValidationCode"> Envoyer le code de validation à @Model.FirstName @Model.LastName </label>
+        <input asp-for="ValidationCode" class="form-control" value="@Model.ValidationCode" />
+        <span asp-validation-for="ValidationCode" class="text-danger"></span>
+    </div>
+
+
+    
+    <input type="submit" value="Envoyer le Code" class="btn btn-primary"/>
+
+
+</form>

@@ -6,8 +6,8 @@ namespace QuizzAppFilRouge.Domain
 {
     public interface IResponseRepository
     {
-        Task AddResponse(Response applicantResponse, int quizzId, int questionId);
-        Task AddResponseForFreeQuestions(Response applicantResponse, int quizzId, int questionId);
+        Task AddApplicantResponse(Response applicantResponse, int quizzId, int questionId);
+        Task AddApplicantResponseForFreeQuestions(Response applicantResponse, int quizzId, int questionId);
 
         Task<List<Response>> getQuizzResponses(int quizzId);
 
@@ -49,7 +49,7 @@ namespace QuizzAppFilRouge.Domain
             await context.SaveChangesAsync();
         }
 
-        public async Task AddResponse
+        public async Task AddApplicantResponse
         (
             Response applicantResponse,
             int quizzId,
@@ -69,7 +69,7 @@ namespace QuizzAppFilRouge.Domain
             await context.SaveChangesAsync();
         }
 
-        public async Task AddResponseForFreeQuestions
+        public async Task AddApplicantResponseForFreeQuestions
         (
             Response applicantResponse, 
             int quizzId, 
@@ -105,6 +105,7 @@ namespace QuizzAppFilRouge.Domain
         {
             var quizzResponses = await context.Responses
                 .Include(question => question.Question)
+                    .ThenInclude(question => question.Answers)
                 .Where(response => response.QuizzId == quizzId)
                 .ToListAsync();
 

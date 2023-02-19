@@ -73,7 +73,10 @@
                     asp-route-firstName="@quizz.Passages.ApplicationUser.FirstName" 
                     asp-route-lastName="@quizz.Passages.ApplicationUser.LastName"
                     asp-route-quizzId="@quizz.Passages.QuizzId"
-                    asp-route-applicantId="@quizz.Passages.ApplicationUserId"> 
+                    asp-route-applicantId="@quizz.Passages.ApplicationUserId"
+                    asp-route-applicantId="@quizz.Passages.ApplicationUserId"
+                    asp-route-date ="@quizz.Passages.PassageDate"
+                > 
                 Envoyer Code de validation
                 </a> |
                 <a asp-action="GetQuizzResults" asp-route-quizzId="@quizz.Id">Extraire formulaire de résultats</a> |

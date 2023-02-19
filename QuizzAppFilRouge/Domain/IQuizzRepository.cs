@@ -28,9 +28,6 @@ namespace QuizzAppFilRouge.Domain
 
         Task Create(Quizz quizz);
 
-        //Task<int> calculateQuizzLevel(int quizzId);
-
-        //Task<List<ApplicationUser>> 
 
         Task<int> GetLastQuizzId();
 
@@ -38,7 +35,7 @@ namespace QuizzAppFilRouge.Domain
 
         Task<string> GetValidationCode(int quizzId);
 
-
+        Task AddNotation(double notation, int quizzId);
     }
 
 
@@ -184,7 +181,16 @@ namespace QuizzAppFilRouge.Domain
             return quizz.ValidationCode;
         }
 
+        public async Task AddNotation(double notation, int quizzId)
+        {
+            // Bonne maniere de modifier seulement une colonne dans une table
+            var quizz = await context.Quizzes
+                .FirstOrDefaultAsync(quizz => quizz.Id == quizzId);
 
+            quizz.Notation = notation;
+            
+            await context.SaveChangesAsync();
+        }
     }
 
 

@@ -11,8 +11,8 @@ namespace QuizzAppFilRouge.Controllers
     public class EmailController : Controller
     {
         [HttpGet]
-        [Route("/Email/Index/{validationCode}/{firstName}/{lastName}/{quizzId}/{applicantId}")]
-        public IActionResult Index(string validationCode,string firstName, string lastName, int quizzId, string applicantId)
+        [Route("/Email/Index/{validationCode}/{firstName}/{lastName}/{quizzId}/{applicantId}/{date}")]
+        public IActionResult Index(string validationCode,string firstName, string lastName, int quizzId, string applicantId, DateTime date)
         {
             // Créer un objet EmailViewModel à passer à la vue
 
@@ -22,7 +22,8 @@ namespace QuizzAppFilRouge.Controllers
                 FirstName = firstName,
                 ValidationCode = validationCode,
                 QuizzId = quizzId,
-                ApplicantId = applicantId
+                ApplicantId = applicantId,
+                PassageDate = date
 
             };
 
@@ -30,41 +31,47 @@ namespace QuizzAppFilRouge.Controllers
         }
 
         [HttpPost]
-        [Route("/Email/Index/{validationCode}/{firstName}/{lastName}/{quizzId}/{applicantId}")]
+        [Route("/Email/Index/{validationCode}/{firstName}/{lastName}/{quizzId}/{applicantId}/{date}")]
         public IActionResult Index(EmailViewModel emailViewModel)
         {
             var quizzUrl = $"https://localhost:7256/Quizzs/CheckValidationCode?applicantId={emailViewModel.ApplicantId}&&quizzId={emailViewModel.QuizzId}";
 
 
-            //var emailBody =
-            //    $"Veuillez trouvez ci joint le code de validation vous permettant d'accéder au quizz " +
-            //    $": {Environment.NewLine}" +
-            //    $"{emailViewModel.ValidationCode}" +
-            //    $"et l'URL du Quizz pour y accéder" +
-            //    $"{emailViewModel.ValidationCode}" +
-            //    $"{quizzUrl}" +
-            //    $"";
+            var emailBody =
+                $"Veuillez trouvez ci joint le code de validation vous permettant d'accéder au quizz" +
+                $"" +
+                $"" +
+                $"" +
+                $"" +
+                $"" +
+                $"{Environment.NewLine}" +
+                $"{emailViewModel.ValidationCode}" +
+                $"{Environment.NewLine}" +
+                $"ainsi que l'URL du Quizz pour y accéder" +
+                $"{Environment.NewLine}" +
+                $"{quizzUrl}" +
+                $"{Environment.NewLine}" +
+                $"Votre date de passage est prévue le : {emailViewModel.PassageDate}";
 
-            var emailBody = "Test";
+            //var emailBody = "Test";
             var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse("howard.ratke96@ethereal.email"));
-            email.To.Add(MailboxAddress.Parse("howard.ratke96@ethereal.email"));
+            email.From.Add(MailboxAddress.Parse("candidatfilrouge@hotmail.com"));
+            email.To.Add(MailboxAddress.Parse("candidatfilrouge@hotmail.com"));
             email.Subject = "Code de validation passage du Quizz";
             email.Body = new TextPart(TextFormat.Html)
             {
                 Text = emailBody
             };
-
+            //
 
             using var smtp = new SmtpClient();
-            smtp.Connect("howard.ratke96@ethereal.email", 587);
-            smtp.Authenticate("howard.ratke96@ethereal.email", "NBGv9wMN4BpwMPcccE");
+            smtp.Connect("smtp.office365.com", 587);
+            smtp.Authenticate("candidatfilrouge@hotmail.com", "TestTestTest@2023!");
             smtp.Send(email);
 
             smtp.Disconnect(true);
 
-            return Ok();
-            //return RedirectToAction("Quizzs");
+            return RedirectToAction("Index","Quizzs");
 
 
 

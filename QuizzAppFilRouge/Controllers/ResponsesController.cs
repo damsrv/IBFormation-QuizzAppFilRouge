@@ -16,13 +16,19 @@ namespace QuizzAppFilRouge.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IResponseRepository responseRepository;
+        private readonly IQuizzRepository quizzRepository;
 
 
-        public ResponsesController(ApplicationDbContext context, IResponseRepository responseRepository)
+        public ResponsesController
+        (
+            ApplicationDbContext context, 
+            IResponseRepository responseRepository,
+            IQuizzRepository quizzRepository
+        )
         {
             _context = context;
             this.responseRepository = responseRepository;
-
+            this.quizzRepository = quizzRepository; 
         }
 
         // GET: Responses
@@ -48,6 +54,9 @@ namespace QuizzAppFilRouge.Controllers
 
             foreach (var response in freeQuestionsResponses)
             {
+                if (response.Content == null) // si pas de réponse de l'utilisateur
+                    { response.Content = "Le candidat n'a pas répondu à cette question"; };
+
                 var responseViewModel = new ResponseViewModel
                 {
                     Content = response.Content,
@@ -64,14 +73,13 @@ namespace QuizzAppFilRouge.Controllers
             return View(listfreeQuestionsResponsesViewModel);
 
         }
-        // Fonctionne nickel !
+
+        // Ajoute les corrections faites par le recruteur pour les questions libre en base de donnée.
         [HttpPost]
         [Route("/Quizzs/CorrectFreeQuestionsResponses/{quizzId}")]
         public async Task<IActionResult> CorrectFreeQuestionsResponses(List<ResponseViewModel> correctedResponsesListViewModel)
         {
-
-            //var freeQuestionsResponses = await responseRepository.GetFreeQuestionResponses(correctedResponsesListViewModel[0].QuizzId);
-
+            var quizzId = 0;
 
             foreach (var responseViewModel in correctedResponsesListViewModel)
             {
@@ -83,8 +91,18 @@ namespace QuizzAppFilRouge.Controllers
                     // IsCorrect est ce que le recruteur à décidé concernant la correction de la question
                 };
 
+                quizzId = responseViewModel.QuizzId;
                 await responseRepository.AddCorrectionForFreeQuestion(correctedResponse);
             }
+
+        // Calcule note globale du quizz et l'enregistre en base de donnée
+            // récupére les réponses et calcule la note
+            var quizzResponses = await responseRepository.getQuizzResponses(quizzId);
+
+            double notation = CalculateQuizzNotation(quizzResponses);
+            
+            // enregistre la note en bdd
+            await quizzRepository.AddNotation(notation, quizzId);
 
             return RedirectToAction("Index", "Quizzs");
 
@@ -243,5 +261,25 @@ namespace QuizzAppFilRouge.Controllers
         {
           return (_context.Responses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        public double CalculateQuizzNotation(List<Response> quizzResponses)
+        {
+            double notation = 0;
+            string result = "";
+
+
+            foreach (var response in quizzResponses)
+            {
+
+                if (response.IsCorrect) notation++;
+
+            }
+            //result = $"Note : {notation} / {quizzResponses.Count} ";
+
+            return notation;
+        }
+
+
+
     }
 }

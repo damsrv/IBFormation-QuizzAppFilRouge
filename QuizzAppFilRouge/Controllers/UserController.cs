@@ -53,6 +53,21 @@ namespace QuizzAppFilRouge.Controllers
         }
 
 
+        // redirige sur la bonne page après le login en fonction du role
+        public IActionResult AfterLoginView()
+        {
+
+            var isAdmin = User.IsInRole("Admin");
+
+            if (isAdmin) return View("~/Views\\AdminPage\\AdminPage.cshtml");
+
+            else return View("~/Views\\RecruiterPage\\RecruiterPage.cshtml");
+
+        }
+
+
+
+
         //////////////////////////////////////////////////////////////////////////////////////
         //// CREATE USER GET AND POST FUNCTIONS OK
         //////////////////////////////////////////////////////////////////////////////////////
@@ -78,8 +93,6 @@ namespace QuizzAppFilRouge.Controllers
                 // Utilisation de l'objet UserManager auquel on passe un objet de type IdentityUser.
                 // Appel de la fonction CreateAsync qui va tenter d'enregistrer le nouvel user dans la base (table ASPNETUSERS)
                 
-                
-
                 IdentityResult identityResult = await userManager.CreateAsync(applicationUser);
 
                 // Si email déja utilisé dans base (la requete à échouée)

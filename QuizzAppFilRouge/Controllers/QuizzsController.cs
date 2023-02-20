@@ -21,7 +21,7 @@ using QuizzAppFilRouge.Models.ResponseViewModel;
 
 namespace QuizzAppFilRouge.Controllers
 {
-
+    [Authorize]
     public class QuizzsController : Controller
     {
         private readonly IQuizzRepository quizzsRepository;
@@ -55,7 +55,7 @@ namespace QuizzAppFilRouge.Controllers
         //OK
         public IActionResult Index()
         {
-
+            
 
 
             return View();
@@ -165,14 +165,15 @@ namespace QuizzAppFilRouge.Controllers
         }
 
 
-//////////////////////////////////////////////////////////////////////////////////////
-//// PASSQUIZZ GET AND POST FUNCTIONS 
-//////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+        //// PASSQUIZZ GET AND POST FUNCTIONS 
+        //////////////////////////////////////////////////////////////////////////////////////
         /**
          * Méthode pour le passage des quizzs
          * Recoit une URL avec un id de quizz et le numéro de la question en cours.
          * // GET
          */
+        [AllowAnonymous]
         public async Task<IActionResult> PassQuizz(int quizzId, int actualQuestionNumber = 0)
         {
 
@@ -284,6 +285,7 @@ namespace QuizzAppFilRouge.Controllers
         //}
 
         // POST
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> PassQuizz(PassingQuizzViewModel passingQuizzViewModel)
         {

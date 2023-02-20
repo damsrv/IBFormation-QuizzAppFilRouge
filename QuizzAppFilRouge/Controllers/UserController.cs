@@ -92,7 +92,6 @@ namespace QuizzAppFilRouge.Controllers
                 else
                 {
                     // TODO : Créer le role correspondant
-                    // TODO : Réfléchir au cas de connexion hors admin ? Faut t'il que les recruteurs puissent s'identifier ou pas ? 
 
                     return RedirectToAction("Index");
                 }

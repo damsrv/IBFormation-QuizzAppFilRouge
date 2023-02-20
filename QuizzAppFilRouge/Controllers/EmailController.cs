@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MimeKit.Text;
+﻿using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Mvc;
 using MimeKit;
-using MailKit.Net.Smtp;
+using MimeKit.Text;
 using QuizzAppFilRouge.Models;
-using System.Text;
-using MailKit.Security;
 
 namespace QuizzAppFilRouge.Controllers
 {
@@ -12,7 +10,7 @@ namespace QuizzAppFilRouge.Controllers
     {
         [HttpGet]
         [Route("/Email/Index/{validationCode}/{firstName}/{lastName}/{quizzId}/{applicantId}/{date}")]
-        public IActionResult Index(string validationCode,string firstName, string lastName, int quizzId, string applicantId, DateTime date)
+        public IActionResult Index(string validationCode, string firstName, string lastName, int quizzId, string applicantId, DateTime date)
         {
             // Créer un objet EmailViewModel à passer à la vue
 
@@ -71,13 +69,47 @@ namespace QuizzAppFilRouge.Controllers
 
             smtp.Disconnect(true);
 
-            return RedirectToAction("Index","Quizzs");
-
-
+            return RedirectToAction("Index", "Quizzs");
 
         }
 
+        /**
+         * Méthode envoi de mail au recruteur en fin de passage de quizz pour le candidat.
+         */
+        [HttpGet]
+        public IActionResult SendEmailEndQuizz(int quizzId)
+        {
+
+            var date = DateTime.Now;
+            var days = date.ToString("dd-MM-yyyy");
+            var hours = date.ToString("HH:mm:ss");
+
+            var emailBody =
+                $"Le quizz n° 1034 vient d'être terminé par le candidat le {days} à {hours}.";
 
 
+            var email = new MimeMessage();
+            email.From.Add(MailboxAddress.Parse("recruteurfilrouge@hotmail.com"));
+            email.To.Add(MailboxAddress.Parse("recruteurfilrouge@hotmail.com"));
+            email.Subject = "Code de validation passage du Quizz";
+            email.Body = new TextPart(TextFormat.Html)
+            {
+                Text = emailBody
+            };
+            //
+
+            using var smtp = new SmtpClient();
+            smtp.Connect("smtp.office365.com", 587);
+            smtp.Authenticate("recruteurfilrouge@hotmail.com", "TestTestTest@2023!");
+            smtp.Send(email);
+
+            smtp.Disconnect(true);
+
+            //return RedirectToAction("Index", "Quizzs");
+
+            return View("~/Views\\Quizzs\\ThanksMessage.cshtml");
+
+        }
     }
+
 }

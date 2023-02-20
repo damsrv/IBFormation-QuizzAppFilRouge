@@ -262,8 +262,9 @@ namespace QuizzAppFilRouge.Controllers
             // Si fin du quizz
             else
             {
-                // TODO : Implémenter fonctionnalité envoi du mail au recruteur pour fin de quizz
-                return View("ThanksMessage");
+                // Envoi le mail au recruteur pour signifier la fin du quizz
+                return RedirectToAction("SendEmailEndQuizz","Email", new {quizzId = quizzId } );
+                
 
             }
             //Plus necessaire car checkbox fonctionne.
@@ -290,54 +291,76 @@ namespace QuizzAppFilRouge.Controllers
             // Si question = QCM
             if (passingQuizzViewModel.QuestionViewModel.QuestionType == QuestionTypeEnum.QCM)
             {
-                // TODO : metre un e condition si checkbox vide
-
-                // Cherche dans la liste des réponses QCM laquelle est checkée
-                var choosenAnswerViewModel = passingQuizzViewModel.AnswerViewModel
-                .Select(answer => answer)
-                .Where(answer => answer.IsChecked == true)
-                .First();
-
-                // créer un object Answer avec l'id et le content de la question selectionnée
-                var choosenAnswer = new Answer
+                // vérifie si au moins une checkbox est cochée
+                var atLeastOneIsChecked = AtLeastOneIsChecked(passingQuizzViewModel.AnswerViewModel);
+                // si aucune cochée
+                if(atLeastOneIsChecked == false)
                 {
-                    Id = choosenAnswerViewModel.Id,
-                    Content = choosenAnswerViewModel.Content,
-                };
+                    TempData["AlertMessage"] = "Veuillez checker au moins une réponse";
+
+                    var returnObject = new
+                    {
+                        quizzId = passingQuizzViewModel.QuizzViewModel.Id,
+                        actualQuestionNumber = (passingQuizzViewModel.QuestionViewModel.ActualQuestionNumber)
+
+                    };
+
+                    return RedirectToAction("PassQuizz", "Quizzs", returnObject);
 
 
-                // 1 Aller récupérer la bonne réponse pour la question en cours
-                var goodAnswer = await answerRepository
-                    .getGoodAnswerByQuestion(passingQuizzViewModel.QuestionViewModel.Id);
-
-                // 2 Vérifier si la choosen answer est la bonne réponse
-                var isCorrect = IsAGoodReponse(choosenAnswer, goodAnswer);
-
-                // Créer l'objet réponse à envoyé en base
-                var applicantResponse = new Response
+                }
+                else // au moins une est cochée
                 {
-                    Content = choosenAnswer.Content,
-                    IsCorrect = isCorrect,
-                    Comment = passingQuizzViewModel.Comment,
-                };
+                    // Cherche dans la liste des réponses QCM laquelle est cochée
+                    var choosenAnswerViewModel = passingQuizzViewModel.AnswerViewModel
+                    .Select(answer => answer)
+                    .Where(answer => answer.IsChecked == true)
+                    .First();
 
-                // Ajoute la réponse du user à la question dans la table response 
-                await responseRepository.AddApplicantResponse
-                (
-                    applicantResponse,
-                    passingQuizzViewModel.QuizzViewModel.Id,
-                    passingQuizzViewModel.QuestionViewModel.Id
+                    // créer un object Answer avec l'id et le content de la question selectionnée
+                    var choosenAnswer = new Answer
+                    {
+                        Id = choosenAnswerViewModel.Id,
+                        Content = choosenAnswerViewModel.Content,
+                    };
 
-                );
 
-                var returnObject = new
-                {
-                    quizzId = passingQuizzViewModel.QuizzViewModel.Id,
-                    actualQuestionNumber = (passingQuizzViewModel.QuestionViewModel.ActualQuestionNumber + 1)
+                    // 1 Aller récupérer la bonne réponse pour la question en cours
+                    var goodAnswer = await answerRepository
+                        .getGoodAnswerByQuestion(passingQuizzViewModel.QuestionViewModel.Id);
 
-                };
+                    // 2 Vérifier si la choosen answer est la bonne réponse
+                    var isCorrect = IsAGoodReponse(choosenAnswer, goodAnswer);
 
-                return RedirectToAction("PassQuizz", "Quizzs", returnObject);
+                    // Créer l'objet réponse à envoyé en base
+                    var applicantResponse = new Response
+                    {
+                        Content = choosenAnswer.Content,
+                        IsCorrect = isCorrect,
+                        Comment = passingQuizzViewModel.Comment,
+                    };
+
+                    // Ajoute la réponse du user à la question dans la table response 
+                    await responseRepository.AddApplicantResponse
+                    (
+                        applicantResponse,
+                        passingQuizzViewModel.QuizzViewModel.Id,
+                        passingQuizzViewModel.QuestionViewModel.Id
+
+                    );
+
+                    // On incrémente le numéro de question pour passer à la prochaine question
+                    passingQuizzViewModel.QuestionViewModel.ActualQuestionNumber += 1;
+
+                    var returnObject = new
+                    {
+                        quizzId = passingQuizzViewModel.QuizzViewModel.Id,
+                        actualQuestionNumber = (passingQuizzViewModel.QuestionViewModel.ActualQuestionNumber)
+
+                    };
+
+                    return RedirectToAction("PassQuizz", "Quizzs", returnObject);
+                }
             }
             // Si question est FreeQuestion
             else if (passingQuizzViewModel.QuestionViewModel.QuestionType == QuestionTypeEnum.FreeQuestion)
@@ -364,10 +387,13 @@ namespace QuizzAppFilRouge.Controllers
 
                 );
 
+                // On incrémente le numéro de question pour passer à la prochaine question
+                passingQuizzViewModel.QuestionViewModel.ActualQuestionNumber = passingQuizzViewModel.QuestionViewModel.ActualQuestionNumber + 1;
+
                 var returnObject = new
                 {
                     quizzId = passingQuizzViewModel.QuizzViewModel.Id,
-                    actualQuestionNumber = (passingQuizzViewModel.QuestionViewModel.ActualQuestionNumber + 1)
+                    actualQuestionNumber = passingQuizzViewModel.QuestionViewModel.ActualQuestionNumber
 
                 };
 
@@ -1027,6 +1053,19 @@ namespace QuizzAppFilRouge.Controllers
         public bool IsAGoodReponse(Answer choosenAnswer, Answer goodAnswer)
         {
             return choosenAnswer.Id == goodAnswer.Id;
+
+        }
+
+        public bool AtLeastOneIsChecked(List<AnswerViewModel> answerViewModel)
+        {
+            bool atLeastOneIsChecked = false;
+
+            foreach (var answer in answerViewModel)
+            {
+                if (answer.IsChecked == true) atLeastOneIsChecked = true;
+            }
+
+            return atLeastOneIsChecked;
 
         }
 

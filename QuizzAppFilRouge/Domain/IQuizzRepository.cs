@@ -78,7 +78,6 @@ namespace QuizzAppFilRouge.Domain
             return quizzs;
         }
 
-        // TODO : Method GetAllByRecruiter (for recruiter only cos admin can see everything)
 
         public async Task<Quizz> Details(int? id)
         {

@@ -51,6 +51,8 @@ html {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
 }
 
 .denied {
@@ -70,11 +72,31 @@ html {
   border-radius: 20px;
 }
 
+.onHoverCard:hover {
+  animation: 0.5s;
+  cursor: pointer;
+  background: #ff0084 !important; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #33001b,
+    #ff0084
+  ) !important; /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #33001b,
+    #ff0084
+  ) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
 .bg-login {
   background-image: url(https://img.freepik.com/vecteurs-libre/fond-abstrait-geometrique-plat_23-2149447623.jpg?w=1060&t=st=1676389903~exp=1676390503~hmac=ea33f7bb80c330bc0075222ea03b2b0cfe68441df3e12bdf2dfa261753544594);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .border-20-px {

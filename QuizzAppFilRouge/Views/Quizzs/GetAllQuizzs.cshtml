@@ -6,12 +6,12 @@
 @{
     ViewData["Title"] = "Index";
 }
-<h1>Index</h1>
+<div class="vh-100 overflow-auto">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<div class="d-flex justify-content-end">
+    <a class="me-4 mt-4 btn btn-primary" asp-action="Create">Créer un nouveau quiz</a>
+</div>
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -39,53 +39,72 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var quizz in Model) {
-        <tr>
-            <td>
-                @quizz.Id
-            </td>
-            <td>
-                @quizz.Notation
-            </td>
-            <td>
-                @quizz.QuizzLevel
-            </td>
-            <td>
-                @quizz.QuizzCreator
-            </td>
-            <td>
-                @quizz.QuizzLangage
-            </td>
-            <td>
-                @quizz.Passages.ApplicationUser.FirstName
-                @quizz.Passages.ApplicationUser.LastName
+@foreach (var quizz in Model)
+            {
+                        <tr>
+                        <td>
+                        @quizz.Id
+                        </td>
+                        <td>
+                        @quizz.Notation
+                        </td>
+                        <td>
+                        @quizz.QuizzLevel
+                        </td>
+                        <td>
+                        @quizz.QuizzCreator
+                        </td>
+                        <td>
+                        @quizz.QuizzLangage
+                        </td>
+                        <td>
+                        @quizz.Passages.ApplicationUser.FirstName
+                        @quizz.Passages.ApplicationUser.LastName
 
-            </td>
-            <td>
-                @quizz.ValidationCode
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@quizz.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@quizz.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@quizz.Id">Delete</a>
-                <a asp-controller = "Email" asp-action="Index" 
+                        </td>
+                        <td>
+                        @quizz.ValidationCode
+                        </td>
+                        <td>
+
+                            <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle bg-gradient-blue" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Réglages
+                    </button>
+
+                    <ul class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton1">
+                    <div class="d-grid gap-3">                    
+                    <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@quizz.Id">Edit</a></li>
+                    <li><a class="dropdown-item" asp-action="Details" asp-route-id="@quizz.Id">Details</a></li>
+                    <li><a class="dropdown-item" asp-action="Delete" asp-route-id="@quizz.Id">Delete</a></li>
+                    <li><a class="dropdown-item" asp-controller = "Email" asp-action="Index"
                     asp-route-validationCode="@quizz.ValidationCode" 
                     asp-route-firstName="@quizz.Passages.ApplicationUser.FirstName" 
                     asp-route-lastName="@quizz.Passages.ApplicationUser.LastName"
                     asp-route-quizzId="@quizz.Passages.QuizzId"
                     asp-route-applicantId="@quizz.Passages.ApplicationUserId"
                     asp-route-applicantId="@quizz.Passages.ApplicationUserId"
-                    asp-route-date ="@quizz.Passages.PassageDate"
-                > 
-                Envoyer Code de validation
-                </a> |
-                <a asp-action="GetQuizzResults" asp-route-quizzId="@quizz.Id">Extraire formulaire de résultats</a> |
+                    asp-route-date ="@quizz.Passages.PassageDate">
+                            Envoyer Code de validation</a> </li>
+                    <li><a  class="dropdown-item" asp-action="GetQuizzResults" asp-route-quizzId="@quizz.Id">Extraire formulaire de résultats</a> </li>
 
-                <a asp-action="GetFreeQuestionResponse" asp-route-quizzId="@quizz.Id">Extraire questions libres pour correction</a> |
+                    <li><a class="dropdown-item" asp-action="GetFreeQuestionResponse" asp-route-quizzId="@quizz.Id">Extraire questions libres pour correction</a></li>
 
-                <a asp-controller="Responses" asp-action="CorrectFreeQuestionsResponses" asp-route-quizzId="@quizz.Id">Ajouter correction pour les questions libres</a> |
-            </td>
-        </tr>
-}
+                    <li><a class="dropdown-item" asp-controller="Responses" asp-action="CorrectFreeQuestionsResponses" asp-route-quizzId="@quizz.Id">Ajouter correction pour les questions libres</a></li>
+                    </div>
+                    </ul>
+                        </td>
+                    </tr>
+            }
     </tbody>
 </table>
+</div>
+
+
+<script>
+    var dropdown = document.getElementById("dropdownMenuLink")
+    var dropdownmenu = document.getElementById("dropdown-menu")
+    console.log("dropdownmenu", dropdownmenu)
+    dropdown.onclick = () => dropdownmenu.classList.toggle("show");
+    console.log("dropdown", dropdown)
+</script>

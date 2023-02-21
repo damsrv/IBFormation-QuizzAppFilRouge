@@ -5,13 +5,12 @@
 @{
     ViewData["Title"] = "Créer un Quizz";
     ViewBag.BodyClass = "Quizz-page";
+    ViewBag.Class = "quizz-login";
 }
 
-
-
-<hr />
-<div class="row">
-    <div class="card rounded-3 shadow-lg p-4 m-4 align-items-center">
+@* <div class="d-flex flex-column vh-100 overflow-auto align-items-center justify-content-center"> *@
+<div class="row w-100">
+    <div class="card rounded-3 shadow-lg p-4 mt-4 mb-4 align-items-center">
         <div class="d-flex">
         <img width="200" height="200"  src="~/assets/images/QuizzDesign.png" alt="Image de Quizz" class="rounded-circle"/>
         </div>
@@ -79,10 +78,11 @@
         </form>
     </div>
 
-</div>
+@* </div> *@
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-danger" asp-action="Index">Revenir en arrière</a>
+</div>
 </div>
 
 @section Scripts {

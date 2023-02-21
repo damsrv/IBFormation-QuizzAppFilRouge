@@ -55,6 +55,13 @@ html {
   justify-content: center;
 }
 
+.test {
+  background-image: url("../assets/images/bg-test.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 .denied {
   background-image: url(https://img.freepik.com/vecteurs-libre/mardi-gras-au-design-plat_52683-32078.jpg?w=740&t=st=1676381469~exp=1676382069~hmac=60d9c06dd4ae73e4647e67673a2996432ebe165b1d2eb60301cce7f160a82216);
 }
@@ -131,18 +138,32 @@ html {
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
+.bg-gradient-blue {
+  background: #396afc; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #2948ff,
+    #396afc
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #2948ff,
+    #396afc
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
 .bg-gradient-purple {
-  background: #7f00ff; /* fallback for old browsers */
+  background: #7f00ff !important; /* fallback for old browsers */
   background: -webkit-linear-gradient(
     to left,
     #e100ff,
     #7f00ff
-  ); /* Chrome 10-25, Safari 5.1-6 */
+  ) !important; /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(
     to left,
     #e100ff,
     #7f00ff
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  ) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .bg-gradient-green {

@@ -5,18 +5,26 @@
 
 @model EmailViewModel;
 
+@{
+    ViewBag.BodyClass = "test";
+    ViewBag.Class = "quizz-login";
+}
+
+<div class="vh-100 justify-content-center align-items-center d-flex">
+<div class="card shadow-lg p-4">
 <form method="post"> 
-
-
-    <div class="form-group"> 
-        <label asp-for="ValidationCode"> Envoyer le code de validation à @Model.FirstName @Model.LastName </label>
-        <input asp-for="ValidationCode" class="form-control" value="@Model.ValidationCode" />
+    <div class="form-group text-center"> 
+        <label asp-for="ValidationCode"> Envoyer le code de validation à </label>
+        <div class="grid">
+        <p class="fw-bold mb-0"> @Model.FirstName </p>
+        <p class="fw-bold mt-0">@Model.LastName </p>
+        </div>
+        <input asp-for="ValidationCode" class="form-control p-3" value="@Model.ValidationCode" />
         <span asp-validation-for="ValidationCode" class="text-danger"></span>
     </div>
-
-
-    
-    <input type="submit" value="Envoyer le Code" class="btn btn-primary"/>
-
-
+    <div class="text-center">
+    <input type="submit" value="Envoyer le Code" class="btn btn-primary mt-4 mb-4"/>
+    </div>
 </form>
+</div>
+</div>

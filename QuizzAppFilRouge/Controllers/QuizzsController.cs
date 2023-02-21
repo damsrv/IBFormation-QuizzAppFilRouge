@@ -733,7 +733,7 @@ namespace QuizzAppFilRouge.Controllers
 
             //}
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(GetAllQuizzs));
         }
 
 

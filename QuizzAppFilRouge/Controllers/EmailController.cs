@@ -69,7 +69,7 @@ namespace QuizzAppFilRouge.Controllers
 
             smtp.Disconnect(true);
 
-            return RedirectToAction("Index", "Quizzs");
+            return RedirectToAction("GetAllQuizzs", "Quizzs");
 
         }
 

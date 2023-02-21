@@ -213,7 +213,7 @@ namespace QuizzAppFilRouge.Controllers
 
                 PassingQuizzViewModel passingQuizzViewModel = new PassingQuizzViewModel();
 
-                // Si QCM on créer une liste de question
+                // Si QCM on créer une liste de réponses
                 if (actualQuestion.QuestionType == QuestionTypeEnum.QCM)
                 {
                     List<AnswerViewModel> answerList = new List<AnswerViewModel>();

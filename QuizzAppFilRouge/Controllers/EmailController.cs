@@ -109,8 +109,8 @@ namespace QuizzAppFilRouge.Controllers
 
 
             var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse("recruteurfilrouge@hotmail.com"));
-            email.To.Add(MailboxAddress.Parse("recruteurfilrouge@hotmail.com"));
+            email.From.Add(MailboxAddress.Parse("candidatfilrouge@hotmail.com"));
+            email.To.Add(MailboxAddress.Parse("candidatfilrouge@hotmail.com"));
             email.Subject = "Code de validation passage du Quizz";
             email.Body = new TextPart(TextFormat.Html)
             {
@@ -120,7 +120,7 @@ namespace QuizzAppFilRouge.Controllers
 
             using var smtp = new SmtpClient();
             smtp.Connect("smtp.office365.com", 587);
-            smtp.Authenticate("recruteurfilrouge@hotmail.com", "TestTestTest@2023!");
+            smtp.Authenticate("candidatfilrouge@hotmail.com", "TestTestTest@2023!");
             smtp.Send(email);
 
             smtp.Disconnect(true);

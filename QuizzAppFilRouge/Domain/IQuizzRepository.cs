@@ -75,6 +75,7 @@ namespace QuizzAppFilRouge.Domain
                 .Include(quizz => quizz.Passages)// Le include permet de faire des Jointures
                     .ThenInclude(passage => passage.ApplicationUser)
                 .Include(user => user.QuizzCreator)
+                .Include(quizz => quizz.Questions)
                 .ToListAsync();
 
             return quizzs;

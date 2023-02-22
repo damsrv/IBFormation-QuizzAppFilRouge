@@ -104,9 +104,9 @@ namespace QuizzAppFilRouge.Controllers
             // enregistre la note en bdd
             await quizzRepository.AddNotation(notation, quizzId);
 
-            
+            var isAdmin = User.IsInRole("Admin");
 
-            return RedirectToAction("GetAllQuizzs", "Quizzs");
+            return RedirectToAction("GetAllQuizzs", "Quizzs", new { isAdmin = isAdmin });
 
         }
 

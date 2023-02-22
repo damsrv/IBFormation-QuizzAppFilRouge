@@ -40,7 +40,10 @@ namespace QuizzAppFilRouge.Models.QuizzViewModels
 
         public string selectedCandidateId { get; set; }
 
+
         public DateTime PassageDate { get; set; }
+
+
 
         //public Question ActualQuestion { get; set; }
 

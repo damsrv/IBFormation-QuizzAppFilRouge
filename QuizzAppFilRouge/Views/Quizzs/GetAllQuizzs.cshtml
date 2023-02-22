@@ -35,6 +35,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.ValidationCode)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PassageDate)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -46,7 +49,7 @@
                         @quizz.Id
                         </td>
                         <td>
-                        @quizz.Notation
+                        @quizz.Notation / @quizz.TotalQuestionsQuizz
                         </td>
                         <td>
                         @quizz.QuizzLevel
@@ -66,10 +69,13 @@
                         @quizz.ValidationCode
                         </td>
                         <td>
+                        @quizz.Passages.PassageDate
+                        </td>
+                        <td>
 
-                            <div class="dropdown">
+                <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle bg-gradient-blue" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    Réglages
+                    Actions
                     </button>
 
                     <ul class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton1">
@@ -90,7 +96,7 @@
                     <li><a class="dropdown-item" asp-action="GetFreeQuestionResponse" asp-route-quizzId="@quizz.Id">Extraire questions libres pour correction</a></li>
 
                     <li><a class="dropdown-item" asp-controller="Responses" asp-action="CorrectFreeQuestionsResponses" asp-route-quizzId="@quizz.Id">Ajouter correction pour les questions libres</a></li>
-                    </div>
+                </div>
                     </ul>
                         </td>
                     </tr>

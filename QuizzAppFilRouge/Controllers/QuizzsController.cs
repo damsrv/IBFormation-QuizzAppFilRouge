@@ -446,6 +446,7 @@ namespace QuizzAppFilRouge.Controllers
                     QuizzCreator = quizz.QuizzCreator,
                     QuizzLangage= quizz.QuizzLangage,
                     Passages= quizz.Passages,
+                    TotalQuestionsQuizz = quizz.Questions.Count
                 });
 
             }
@@ -657,6 +658,7 @@ namespace QuizzAppFilRouge.Controllers
 
             // Créer la select list HandledByMeCandidates qui va être envoyée à la vue
             quizzViewModel.HandledByMeCandidates = new List<SelectListItem>();
+
             foreach (var user in userList)
             {
                 quizzViewModel.HandledByMeCandidates
@@ -666,6 +668,7 @@ namespace QuizzAppFilRouge.Controllers
                         Value = user.Id
                     });
             }
+            quizzViewModel.PassageDate= DateTime.Now;
 
             return View(quizzViewModel);
         }
@@ -735,8 +738,9 @@ namespace QuizzAppFilRouge.Controllers
             //{
 
             //}
+            bool isAdmin = User.IsInRole("Admin");
 
-            return RedirectToAction(nameof(GetAllQuizzs));
+            return RedirectToAction("GetAllQuizzs", new { isAdmin  = isAdmin });
         }
 
 

@@ -36,6 +36,8 @@ namespace QuizzAppFilRouge.Domain
         Task<string> GetValidationCode(int quizzId);
 
         Task AddNotation(double notation, int quizzId);
+
+        Task<string> GetPassageDate(int quizzid);
     }
 
 
@@ -189,6 +191,16 @@ namespace QuizzAppFilRouge.Domain
             quizz.Notation = notation;
             
             await context.SaveChangesAsync();
+        }
+
+        public async Task<string> GetPassageDate(int quizzid)
+        {
+            var passage = await context.Passages
+                .Where(passage => passage.QuizzId == quizzid)
+                .Select(passage => passage.PassageDate.ToString())
+                .FirstOrDefaultAsync();
+
+            return passage;
         }
     }
 

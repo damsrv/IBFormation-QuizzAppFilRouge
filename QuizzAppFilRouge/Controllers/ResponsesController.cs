@@ -104,7 +104,9 @@ namespace QuizzAppFilRouge.Controllers
             // enregistre la note en bdd
             await quizzRepository.AddNotation(notation, quizzId);
 
-            return RedirectToAction("Index", "Quizzs");
+            
+
+            return RedirectToAction("GetAllQuizzs", "Quizzs");
 
         }
 

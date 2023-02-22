@@ -78,13 +78,12 @@
                     <li><a class="dropdown-item" asp-action="Details" asp-route-id="@quizz.Id">Details</a></li>
                     <li><a class="dropdown-item" asp-action="Delete" asp-route-id="@quizz.Id">Delete</a></li>
                     <li><a class="dropdown-item" asp-controller = "Email" asp-action="Index"
-                    asp-route-validationCode="@quizz.ValidationCode" 
-                    asp-route-firstName="@quizz.Passages.ApplicationUser.FirstName" 
-                    asp-route-lastName="@quizz.Passages.ApplicationUser.LastName"
-                    asp-route-quizzId="@quizz.Passages.QuizzId"
-                    asp-route-applicantId="@quizz.Passages.ApplicationUserId"
-                    asp-route-applicantId="@quizz.Passages.ApplicationUserId"
-                    asp-route-date ="@quizz.Passages.PassageDate">
+                        asp-route-validationCode="@quizz.ValidationCode" 
+                        asp-route-firstName="@quizz.Passages.ApplicationUser.FirstName" 
+                        asp-route-lastName="@quizz.Passages.ApplicationUser.LastName"
+                        asp-route-quizzId="@quizz.Passages.QuizzId"
+                        asp-route-applicantId="@quizz.Passages.ApplicationUserId"
+                        asp-route-date ="@quizz.Passages.PassageDate.ToString()">
                             Envoyer Code de validation</a> </li>
                     <li><a  class="dropdown-item" asp-action="GetQuizzResults" asp-route-quizzId="@quizz.Id">Extraire formulaire de résultats</a> </li>
 

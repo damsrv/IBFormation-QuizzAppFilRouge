@@ -124,6 +124,7 @@ namespace QuizzAppFilRouge.Controllers
          * au quizzId
          * 
          */
+        [AllowAnonymous]
         public async Task<IActionResult> CheckValidationCode(string applicantId, int quizzId)
         {
             var quizzViewModel = new QuizzViewModel
@@ -144,6 +145,7 @@ namespace QuizzAppFilRouge.Controllers
 
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> CheckValidationCode(QuizzViewModel quizzViewModel )
         {
 
@@ -453,34 +455,35 @@ namespace QuizzAppFilRouge.Controllers
         }
 
         //OK
-        // GET: Quizzs
-        public async Task<IActionResult> GetAllQuizzs()
-        {
+        // POST: Quizzs
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllQuizzs()
+        //{
 
 
-            var quizzes = await quizzsRepository.GetAll();
+        //    var quizzes = await quizzsRepository.GetAll();
 
-            var listQuizzViewModel = new List<QuizzViewModel>();
+        //    var listQuizzViewModel = new List<QuizzViewModel>();
 
-            foreach (var quizz in quizzes)
-            {
+        //    foreach (var quizz in quizzes)
+        //    {
 
-                listQuizzViewModel.Add(new QuizzViewModel
-                {
-                    Id = quizz.Id,
-                    Notation = quizz.Notation,
-                    ValidationCode = quizz.ValidationCode,
-                    QuizzLevel = quizz.QuizzLevel,
-                    QuizzCreator = quizz.QuizzCreator,
-                    QuizzLangage = quizz.QuizzLangage,
-                    Passages = quizz.Passages,
-                });
+        //        listQuizzViewModel.Add(new QuizzViewModel
+        //        {
+        //            Id = quizz.Id,
+        //            Notation = quizz.Notation,
+        //            ValidationCode = quizz.ValidationCode,
+        //            QuizzLevel = quizz.QuizzLevel,
+        //            QuizzCreator = quizz.QuizzCreator,
+        //            QuizzLangage = quizz.QuizzLangage,
+        //            Passages = quizz.Passages,
+        //        });
 
-            }
+        //    }
 
-            return View(listQuizzViewModel);
+        //    return View(listQuizzViewModel);
 
-        }
+        //}
 
 
         //////////////////////////////////////////////////////////////////////////////////////

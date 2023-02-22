@@ -10,7 +10,7 @@
 
         public string ApplicantId { get; set; }
 
-        public DateTime PassageDate { get; set; }
+        public string PassageDate { get; set; }
 
     }
 }

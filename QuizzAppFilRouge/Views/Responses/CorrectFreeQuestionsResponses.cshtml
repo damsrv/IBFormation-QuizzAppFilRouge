@@ -9,42 +9,78 @@
 
 <hr />
 
-        <form method="post">
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
+@*
+                    Mon code d'origine avant bootstrap'    
+                    <table>
+
+                        <th> Question </th>
+                        <th> Réponse </th>
+                        <th> Est-ce correct ? </th>
+
+                        <td>@Model[i].Question.Content</td>
+                        <td>@Model[i].Content</td>
+
+                            <td>                    
+                                <input type="checkbox" asp-for="@Model[i].IsTrue" class="form-check-input" />
+                                <label class="form-check-label" asp-for="@Model[i].IsTrue"> Vrai</label>
+
+                                <input type="checkbox" asp-for="@Model[i].IsFalse" class="form-check-input"/>
+                                <label class="form-check-label" asp-for="@Model[i].IsFalse"> Faux </label>
+                            </td>
+
+
+
+                    </table>
+*@
+
+    <form method="post" asp-action="CorrectFreeQuestionsResponses" />
+    
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <table class="table">
+            <thead>
+        
+            <tr>
+                <th scope="col">Question</th>
+                <th scope="col">Réponse</th>
+                <th scope="col">Est-ce correct ? </th>
+
+            </tr>
+
+            </thead>
+            <tbody>
+
             @for (int i = 0; i < Model.Count(); i++) // Boucle sur la liste de réponses libre
             {
-                <h2>Contenu de la Question : </h2>
-                <h3>@Model[i].Question.Content </h3>
-
-                <h2>Contenu de la Réponse : </h2>
-                <h3> @Model[i].Content </h3>
-
-                <h2>Veuillez selectionner si la réponse est correcte ? </h2>
-
-                
-                    <input type="checkbox" asp-for="@Model[i].IsTrue" class="form-check-input" />
+              
+                <tr>
+                    <td>@Model[i].Question.Content</td>
+                    <td>@Model[i].Content</td>
+                    <td>
+                        <input type="checkbox" asp-for="@Model[i].IsTrue" class="form-check-input" />
                         <label class="form-check-label" asp-for="@Model[i].IsTrue"> Vrai</label>
 
-                    <input type="checkbox" asp-for="@Model[i].IsFalse" class="form-check-input"/>
+                        <input type="checkbox" asp-for="@Model[i].IsFalse" class="form-check-input"/>
                         <label class="form-check-label" asp-for="@Model[i].IsFalse"> Faux </label>
-                
-                <input type="hidden" asp-for="@Model[i].Question.Id" />
-                <input type="hidden" asp-for="@Model[i].QuizzId" />
+                    </td>
+                </tr>
 
-
+                    <input type="hidden" asp-for="@Model[i].Question.Id" />
+                    <input type="hidden" asp-for="@Model[i].QuizzId" />
             }
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-end">
+            <input type="submit" value="Valider la correction" class="me-4 mt-4 btn btn-primary"" />
+        </div>
 
 
 
-            <input type="submit" value="Valider la correction" class="btn btn-primary" />
-
-        </form>
 
 
 
-@if (User.Identity.IsAuthenticated) // retourner ) la liste des quizzs
+@*@if (User.Identity.IsAuthenticated) // retourner ) la liste des quizzs
 {
     bool isAdmin = false;
 
@@ -52,19 +88,19 @@
     {
         isAdmin = true;
     }
-        <a asp-controller="Quizzs" asp-action="GetAllQuizzs" asp-route-isAdmin="@isAdmin">Retourner à la liste des Quizzs</a>
+            <a asp-controller="Quizzs" asp-action="GetAllQuizzs" asp-route-isAdmin="@isAdmin">Retourner à la liste des Quizzs</a>
 
-}
+}*@
 
 @section Scripts 
-{
+    {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script>
-    //$('input[type="checkbox"]').on('change', function() {
-    //    $(this).siblings('input[type="checkbox"]').prop('checked', false);
-    //});
-        $('input[type=checkbox]').removeAttr('checked');
-    </script>
+        <script>
+        //$('input[type="checkbox"]').on('change', function() {
+        //    $(this).siblings('input[type="checkbox"]').prop('checked', false);
+        //});
+            $('input[type=checkbox]').removeAttr('checked');
+        </script>
 }
